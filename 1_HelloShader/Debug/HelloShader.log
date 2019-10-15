@@ -1,0 +1,7 @@
+﻿  main.cpp
+d:\build\helloopengl\1_helloshader\main.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\windows kits\10\include\10.0.17763.0\shared\minwindef.h(130): warning C4005: “APIENTRY”: 宏重定义
+  c:\tools\opengl\include\glfw\glfw3.h(98): note: 参见“APIENTRY”的前一个定义
+d:\build\helloopengl\1_helloshader\main.cpp(131): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+d:\build\helloopengl\1_helloshader\main.cpp(132): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+  HelloShader.vcxproj -> D:\build\HelloOpengl\Debug\1_HelloShader.exe
