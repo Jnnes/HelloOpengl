@@ -79,6 +79,9 @@ int main(void) {
 
     Shader shader("shader/shader.vert", "shader/shader.frag");
     Shader shader1("shader/shader1.vert", "shader/shader1.frag");
+    Shader shader2("shader/flip.vert", "shader/shader.frag"); //翻转效果
+    Shader shader3("shader/move.vert", "shader/shader.frag");//移动顶点
+    Shader shader4("shader/move.vert", "shader/positionColor.frag"); //颜色与位置相关
 
     GLuint VAO;
     glGenVertexArrays(1, &VAO);
@@ -127,10 +130,15 @@ int main(void) {
         //
         // .. 绘制物体
         //glDrawArrays(GL_TRIANGLES, 0, 3);  
-        shader.use(); 
+        auto shaderTemp = shader3; //分别执行shader为0,2,3,4显示不同效果
+        shaderTemp.use();
         GLfloat timeValue = glfwGetTime();
         GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-        glUniform4f(glGetUniformLocation(shader.Program, "ourColor"), 0.0f, greenValue, 0.0f, 1.0f); // 必须先使用shaderpragram
+        GLfloat xOffset = greenValue;
+        GLfloat yOffset = (sin(timeValue * 3) / 2);
+        glUniform4f(glGetUniformLocation(shaderTemp.Program, "ourColor"), 0.0f, greenValue, 0.0f, 1.0f); // 必须先使用shaderpragram
+        glUniform2f(glGetUniformLocation(shaderTemp.Program, "moveOffset"), xOffset, yOffset);   
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
 

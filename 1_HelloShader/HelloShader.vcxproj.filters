@@ -43,5 +43,14 @@
     <None Include="shader\shader1.vert">
       <Filter>资源文件\Shader</Filter>
     </None>
+    <None Include="shader\flip.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="shader\move.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="shader\positionColor.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
