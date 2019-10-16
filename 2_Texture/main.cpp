@@ -20,6 +20,7 @@ const char windowsTitles[] = "HelloShader";
 
 void key_callback(GLFWwindow*, int, int, int, int);
 
+GLfloat opcity = 0.2f;
 GLfloat vertices[] = {
     - 1.0f, 0.0f, 0.0f, // 第一个三角形
     -0.5f, 0.5f, 0.0f,
@@ -27,9 +28,9 @@ GLfloat vertices[] = {
 };
 GLfloat vertices1[] = {
     //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f,   // 右上 // 手动在这里翻转Y轴纹理坐标
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,   // 左下
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 0.0f,   // 右上 // 手动在这里翻转Y轴纹理坐标
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 2.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 2.0f,   // 左下
         -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f    // 左上
 };
 
@@ -125,12 +126,12 @@ int main(void) {
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // 禁用4字节对齐
     int widthImg, heightImg;
-    unsigned char* image = SOIL_load_image("container.png", &widthImg, &heightImg, 0, SOIL_LOAD_RGB);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+    unsigned char* image = SOIL_load_image("container.png", &widthImg, &heightImg, 0, SOIL_LOAD_RGB);  
+    glActiveTexture(GL_TEXTURE0);
     GLuint texture;//声明纹理对象ID
-    glGenTextures(1, &texture);//创建一个纹理对象
+    glGenTextures(1, &texture);//创建一个纹理对象    
     glBindTexture(GL_TEXTURE_2D, texture);//绑定纹理对象，后面对纹理的操作都是在这个纹理ID上
     //从图片数据中生成纹理，放到之前绑定的纹理对象中
     //第二个参数时0表示只生成Mipmap中0级别的纹理，如果需要生成其他级别的修改0即可
@@ -139,14 +140,30 @@ int main(void) {
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);//解绑
 
-    Shader shader1("shader/shader1.vert", "shader/shader1.frag");
+    int widthImg1, heightImg1,channels;
+    unsigned char* image1 = SOIL_load_image("awesomeface.png", &widthImg1, &heightImg1, &channels, SOIL_LOAD_RGB);    
+    glActiveTexture(GL_TEXTURE1);
+    GLuint texture1;
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg1, heightImg1, 0, GL_RGB, GL_UNSIGNED_BYTE, image1);
+    //glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image1);
+    float borderColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // 转换纹理的操作完成后再开启4字节对齐
+    
+    Shader shader1("shader/shader1.vert", "shader/shader1.frag");
+        
+    
+    
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
@@ -161,9 +178,21 @@ int main(void) {
         //glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
         
-        shader1.use();    
-        glBindVertexArray(VAO1);
+        shader1.use();   
+        glActiveTexture(GL_TEXTURE0); // 因为上面创建纹理时绑定了一次，但是修改完纹理后马上解绑了，所以这里必须重新绑定
         glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture1"), 0);
+
+        glActiveTexture(GL_TEXTURE1);// 因为上面创建纹理时绑定了一次，但是修改完纹理后马上解绑了，所以这里必须重新绑定
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture2"), 1);
+
+        GLfloat timeValue = glfwGetTime();
+        glUniform1f(glGetUniformLocation(shader1.Program, "angle"), 0); // 输入参数设置旋转角度
+
+        glUniform1f(glGetUniformLocation(shader1.Program, "opcity"), opcity); // 按键控制的透明度
+
+        glBindVertexArray(VAO1);        
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
         // 
         glBindVertexArray(0);
@@ -178,5 +207,14 @@ int main(void) {
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
+    }else if(key == GLFW_KEY_UP && action == GLFW_PRESS) {
+        opcity += 0.01;
+        if (opcity > 1.05)
+            opcity = 1;
+    }
+    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        opcity -= 0.01;
+        if (opcity < 0.05)
+            opcity = 0.0;
     }
 }
