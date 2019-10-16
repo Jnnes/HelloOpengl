@@ -1,4 +1,4 @@
-#define GLEW_STATIC
+﻿#define GLEW_STATIC
 #include <glew/glew.h>
 #include<GLFW/glfw3.h>
 #include<Windows.h>

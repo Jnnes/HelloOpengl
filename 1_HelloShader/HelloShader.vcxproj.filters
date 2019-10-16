@@ -13,19 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\Shader">
+      <UniqueIdentifier>{65b2d066-0eab-4fc7-a49c-544cf8573761}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader\shader1.frag">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="shader\shader1.vert">
-      <Filter>资源文件</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="log.h">
@@ -34,5 +29,19 @@
     <ClInclude Include="shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\shader.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="shader\shader.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="shader\shader1.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="shader\shader1.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
