@@ -2,15 +2,20 @@
 #include <glew/glew.h>
 #include<GLFW/glfw3.h>
 #include<soil/SOIL.h>
+#include <glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
 #include<Windows.h>
 #include<iostream>
 #include <string>
+
 #include <custom/shader.h>
 #include <custom/log.h>
 
 static const char TAG[] = "MAIN";
 
-const char windowsTitles[] = "HelloShader";
+const char windowsTitles[] = "HelloTransform";
 
 ////定义函数原型
 //typedef void(*GL_GENBUFFERS) (GLsizei, GLuint*);
@@ -19,7 +24,7 @@ const char windowsTitles[] = "HelloShader";
 //GL_GENBUFFERS glGenBuffers = (GL_GENBUFFERS)wglGetProcAddress("glGenBuffers");
 
 void key_callback(GLFWwindow*, int, int, int, int);
-
+    
 GLfloat opcity = 0.2f;
 GLfloat vertices[] = {
     - 1.0f, 0.0f, 0.0f, // 第一个三角形
@@ -28,9 +33,9 @@ GLfloat vertices[] = {
 };
 GLfloat vertices1[] = {
     //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 0.0f,   // 右上 // 手动在这里翻转Y轴纹理坐标
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 2.0f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 2.0f,   // 左下
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f,   // 右上 // 手动在这里翻转Y轴纹理坐标
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,   // 左下
         -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f    // 左上
 };
 
@@ -151,19 +156,17 @@ int main(void) {
     SOIL_free_image_data(image1);
     float borderColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // 转换纹理的操作完成后再开启4字节对齐
     
     Shader shader1("shader/shader1.vert", "shader/shader1.frag");
         
-    
-    
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
@@ -188,11 +191,25 @@ int main(void) {
         glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture2"), 1);
 
         GLfloat timeValue = (GLfloat)glfwGetTime();
-        glUniform1f(glGetUniformLocation(shader1.Program, "angle"), timeValue); // 输入参数设置旋转角度
+        glUniform1f(glGetUniformLocation(shader1.Program, "angle"), 10 * timeValue); // 输入参数设置旋转角度
 
         glUniform1f(glGetUniformLocation(shader1.Program, "opcity"), opcity); // 按键控制的透明度
 
+        glm::mat4 trans;
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0));
+        trans = glm::rotate(trans, glm::radians(3.0f * timeValue), glm::vec3(0.0, 0.0, 1.0));
+        trans = glm::scale(trans, glm::vec3(1.2, 1.2, 1.2));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "trans"),1, GL_FALSE, glm::value_ptr(trans));
+
         glBindVertexArray(VAO1);        
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+
+        // 第二个箱子左上角缩放
+        GLfloat scale = sin(timeValue) / 4 + 0.75;
+        glm::mat4 trans1;
+        trans1 = glm::translate(trans1, glm::vec3(-0.5f, 0.5f, 0.0f));
+        trans1 = glm::scale(trans1, glm::vec3(scale, scale, scale));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "trans"), 1, GL_FALSE, glm::value_ptr(trans1));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
         // 
         glBindVertexArray(0);
