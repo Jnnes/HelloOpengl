@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2_Texture", "2_Texture\Text
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3_Transform", "3_Transform\Transform.vcxproj", "{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4_CoordinateSystem", "4_CoordinateSystem\CoordinateSystem.vcxproj", "{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -57,6 +59,14 @@ Global
 		{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}.Release|x64.Build.0 = Release|x64
 		{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}.Release|x86.ActiveCfg = Release|Win32
 		{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}.Release|x86.Build.0 = Release|Win32
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Debug|x64.ActiveCfg = Debug|x64
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Debug|x64.Build.0 = Debug|x64
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Debug|x86.ActiveCfg = Debug|Win32
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Debug|x86.Build.0 = Debug|Win32
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Release|x64.ActiveCfg = Release|x64
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Release|x64.Build.0 = Release|x64
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Release|x86.ActiveCfg = Release|Win32
+		{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
