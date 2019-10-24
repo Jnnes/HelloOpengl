@@ -131,6 +131,7 @@ int main(void) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetKeyCallback(window, key_callback);
     if (window == nullptr)
     {
         Log::e(TAG, "Faild to create GLFW window");
@@ -148,7 +149,6 @@ int main(void) {
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
-    glfwSetKeyCallback(window, key_callback);
 
     if (glewInit()) {
         Log::e(TAG, "Failed init glew");
