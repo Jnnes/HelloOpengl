@@ -41,7 +41,7 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-glm::vec3 lightPos(1.0f, 0.5f, 2.0f);
+glm::vec3 lightPos(1.0f, 0.0f, 2.0f);
 
 GLfloat opcity = 0.2f;
 GLfloat vertices[] = {
@@ -193,7 +193,7 @@ int main(void) {
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
-    Shader shader1("shader/shader1.vert", "shader/shader1.frag");    
+    Shader shader1("shader/material.vert", "shader/material.frag");    
     Shader lightShader("shader/light.vert", "shader/light.frag");
 
     while (!glfwWindowShouldClose(window)) {
@@ -213,8 +213,9 @@ int main(void) {
         glm::mat4 model;
 
         // 渲染光源a
-        lightPos.x = sin(timeValue);
-        lightPos.z = cos(timeValue);
+        //lightPos.x = sin(timeValue);
+        //lightPos.z = cos(timeValue);
+        //lightPos.y = sin(timeValue * 0.4) * 0.5;
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f));
         lightShader.use();
@@ -223,14 +224,23 @@ int main(void) {
         glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+
+        // 渲染物体
         shader1.use();        
         glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));               
-        glUniform3fv(glGetUniformLocation(shader1.Program, "objectColor"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "lightPos"), 1, glm::value_ptr(lightPos));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "viewPos"), 1, glm::value_ptr(cameraPos));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        
+        shader1.setVec3("material.ambient", 0.0215f, 0.1745f, 0.0215f);
+        shader1.setVec3("material.diffuse", 0.07568f, 0.61424f, 0.07568f);
+        shader1.setVec3("material.specular", 0.633f, 0.727811f, 0.633f);
+        shader1.setFloat("material.shininess", 0.6f);
+
+        shader1.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
+        shader1.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f); // 将光照调暗了一些以搭配场景
+        shader1.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        shader1.setVec3("light.position", lightPos);
+        shader1.setVec3("viewPos", cameraPos);
         glBindVertexArray(VAO1);
 
         int count = 0;

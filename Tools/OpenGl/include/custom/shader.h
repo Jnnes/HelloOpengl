@@ -7,6 +7,9 @@
 #include <iostream>
 #include <glew/glew.h>
 #include <custom/log.h>
+#include <glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 
 class Shader
 {
@@ -14,9 +17,15 @@ class Shader
 public:
     // 程序ID
     GLuint Program;
+
     // 构造器读取并构造着色器
     Shader(const GLchar * vertexPath, const GLchar* fragmentPath);
+    
     void use();
+    void setVec3(const char *uniformName, float val1, float val2, float val3);
+    void setVec3(const char *uniformName, glm::vec3);
+    void setFloat(const char *uniformName, float val);
+    void setMat4(const char *uniformName, const float *);
 };
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
@@ -98,6 +107,22 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
 
 void Shader::use(void) {
     glUseProgram(this->Program);
+}
+
+void Shader::setVec3(const char *uniformName, float val1, float val2, float val3) {
+    glUniform3fv(glGetUniformLocation(this->Program, uniformName), 1, glm::value_ptr(glm::vec3(val1, val2, val3)));
+}
+
+void Shader::setVec3(const char *uniformName, glm::vec3 val) {
+    glUniform3fv(glGetUniformLocation(this->Program, uniformName), 1, glm::value_ptr(val));
+}
+
+void Shader::setFloat(const char *uniformName, float val) {
+    glUniform1f(glGetUniformLocation(this->Program, uniformName), val);
+}
+
+void Shader::setMat4(const char *uniformName, const float * value_ptr) {
+    glUniformMatrix4fv(glGetUniformLocation(this->Program, uniformName), 1, GL_FALSE, value_ptr);
 }
 
 #endif // ! SHADER_H

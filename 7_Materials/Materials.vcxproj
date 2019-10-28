@@ -142,6 +142,8 @@
   <ItemGroup>
     <None Include="shader\light.frag" />
     <None Include="shader\light.vert" />
+    <None Include="shader\material.frag" />
+    <None Include="shader\material.vert" />
     <None Include="shader\shader1.frag" />
     <None Include="shader\shader1.vert" />
   </ItemGroup>

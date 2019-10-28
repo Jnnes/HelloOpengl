@@ -43,5 +43,11 @@
     <None Include="shader\light.vert">
       <Filter>资源文件\shader</Filter>
     </None>
+    <None Include="shader\material.frag">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\material.vert">
+      <Filter>资源文件\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
