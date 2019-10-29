@@ -33,8 +33,9 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 GLfloat lastX = 400, lastY = 300;
 
-GLfloat yaw;
-GLfloat pitch;
+// 因为上下左右键调节方向和使用鼠标调节的方案不同，所以切换时会有明显跳跃
+GLfloat yaw = -90.0f;
+GLfloat pitch = 0.0f;
 GLfloat aspect = 45.0f;
 bool firstMouse = true;
 
@@ -134,8 +135,6 @@ float vertices1[] = {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 };
 
-
-
 glm::vec3 cubePositions[] = {
       glm::vec3(0.0f,  0.0f,  0.0f),
       glm::vec3(2.0f,  5.0f, -15.0f),
@@ -161,6 +160,14 @@ GLfloat texCoords[] = {
     0.0f, 0.0f, // left bottom
     1.0f, 0.0f, // right bottom
     0.5f, 1.0f  // up center
+};
+
+glm::vec3 pointLightPositions[] = {
+    glm::vec3(0.7f,  0.2f,  2.0f),
+    glm::vec3(2.3f, -3.3f, -4.0f),
+    glm::vec3(-4.0f,  2.0f, -12.0f),
+    glm::vec3(0.0f,  0.0f, -3.0f),
+    glm::vec3(0.0f,  0.0f, 2.0f) //第五个是聚光
 };
 
 int main(void) {
@@ -251,7 +258,7 @@ int main(void) {
         lastFrame = timeValue;
         do_movement();
         glfwPollEvents();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // 设置默认颜色
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //其他还有深度缓冲，模板缓冲
 
         glEnable(GL_DEPTH_TEST);
@@ -259,20 +266,19 @@ int main(void) {
         glm::mat4 view = glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp);
         // 创建透视投影矩阵，将相机坐标系中的顶点转换到裁剪空间（平面，二维）
         glm::mat4 projection = glm::perspective(glm::radians(aspect), (GLfloat)screenWidth / screenHeight, 0.1f, 100.0f);
-        glm::mat4 model;
-
-        // 渲染光源a
-        //lightPos.x = sin(timeValue);
-        //lightPos.z = cos(timeValue);
-        //lightPos.y = sin(timeValue * 0.4) * 0.5;
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f));
-        lightShader.use();
-        lightShader.setMat4("model", model);
-        lightShader.setMat4("view",view);
-        lightShader.setMat4("projection", projection);
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+        for (int i = 0; i < 5; i++) {
+            // 渲染点光源和聚光光源
+            glm::mat4 model;
+            model = glm::translate(model, pointLightPositions[i]);
+            model = glm::scale(model, glm::vec3(0.2f));
+            lightShader.use();
+            lightShader.setMat4("model", model);
+            lightShader.setMat4("view", view);
+            lightShader.setMat4("projection", projection);
+            glBindVertexArray(lightVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         // 渲染物体
         objectShader.use();
@@ -283,21 +289,43 @@ int main(void) {
         objectShader.setInt("material.diffuse", 0);
         objectShader.setInt("material.specular", 1);
         objectShader.setInt("material.emission", 2);
-        objectShader.setFloat("material.shininess", 0.6f);
+        objectShader.setFloat("material.shininess", 32.0);
 
-        objectShader.setVec3("light.ambient", 0.3f, 0.3f, 0.3f);
-        objectShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // 将光照调暗了一些以搭配场景
-        objectShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-        objectShader.setVec3("light.position", lightPos);
+        // 摄像机位置
         objectShader.setVec3("viewPos", cameraPos);
-        objectShader.setVec3("light.direction", 0.0f, 0.0f, -2.0f);
-        objectShader.setFloat("light.cutOff", glm::cos(glm::radians(22.5f)));
-        objectShader.setFloat("light.outCutOff", glm::cos(glm::radians(30.0f)));
 
-        objectShader.setFloat("light.constant", 1.0f);
-        objectShader.setFloat("light.linear", 0.09f);
-        objectShader.setFloat("light.quadratic", 0.032f);
+        // 定向光源
+        objectShader.setVec3("dirLight.direction", 0.0f, -1.0f, 0.0f);
+        objectShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        objectShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f); // 将光照调暗了一些以搭配场景
+        objectShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
+        // 点光源
+        char uniformNmae[] = "pointLights[0].";
+        for (int i = 0; i < 4; i++) {
+            uniformNmae[12] = '0' + i;
+            std::string tempStr(uniformNmae);
+            objectShader.setVec3((tempStr + std::string("position")).c_str(), pointLightPositions[i]);
+
+            objectShader.setFloat((tempStr + std::string("constant")).c_str(), 1.0f);
+            objectShader.setFloat((tempStr + std::string("linear")).c_str(), 0.09);
+            objectShader.setFloat((tempStr + std::string("quadratic")).c_str(), 0.032);
+            objectShader.setVec3((tempStr + std::string("ambient")).c_str(), 0.05f, 0.05f, 0.05f);
+            objectShader.setVec3((tempStr + std::string("diffuse")).c_str(), 0.8f, 0.8f, 0.8f); // 将光照调暗了一些以搭配场景
+            objectShader.setVec3((tempStr + std::string("specular")).c_str(), 1.0f, 1.0f, 1.0f);
+        }
+
+        // 聚光
+        objectShader.setVec3("spotLight.direction", 0.0f, 0.0f, -1.0f);
+        objectShader.setVec3("spotLight.position", pointLightPositions[4]);
+        objectShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(22.5f)));
+        objectShader.setFloat("spotLight.outCutOff", glm::cos(glm::radians(25.0f)));
+        objectShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        objectShader.setVec3("spotLight.diffuse", 0.0f, 1.0f, 0.0f); // 将光照调暗了一些以搭配场景
+        objectShader.setVec3("spotLight.specular", 0.0f, 1.0f, 0.0f);
+        objectShader.setFloat("spotLight.constant", 1.0f);
+        objectShader.setFloat("spotLight.linear", 0.09);
+        objectShader.setFloat("spotLight.quadratic", 0.032);
         glBindVertexArray(VAO1);
 
         glActiveTexture(GL_TEXTURE0);
@@ -335,7 +363,7 @@ int main(void) {
 bool keys[1024];
 void do_movement(void) {
     GLfloat cameraSpeed = 5.0f * deltaTime;
-    GLfloat moveSpeed = 0.7f;
+    GLfloat moveSpeed = 1.0f;
     if (keys[GLFW_KEY_W])
         cameraPos += moveSpeed * cameraSpeed * cameraFront;
     if (keys[GLFW_KEY_S])

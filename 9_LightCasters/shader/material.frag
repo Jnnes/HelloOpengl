@@ -75,7 +75,7 @@ void main()
 
 	// ¸ù¾İ¾àÀëË¥¼õ
 	float dis = length(light.position - FragPos);
-	float attenuation = 1.0f / (light.constant + light.linear * dis + light.quadratic * dis * dis);	
+	float attenuation = 1.0f / (light.constant + light.linear * dis + light.quadratic * dis * dis);
 	result = attenuation * result;
 	FragColor = vec4(result, 1.0f);
 }
