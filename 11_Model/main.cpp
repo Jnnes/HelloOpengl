@@ -10,11 +10,14 @@
 #include <custom/Model.h>
 
 #include <iostream>
+#include <direct.h>
+#include <stdio.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
+std::string getResPath(std::string);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -78,8 +81,7 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("F:/build/HelloOpengl/resources/objects/nanosuit/nanosuit.obj");
-
+    Model ourModel(getResPath("/objects/nanosuit/nanosuit.obj"));
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -183,4 +185,26 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
+}
+
+std::string getResPath(std::string path) {
+    char *runPath = new char[256];
+    _get_pgmptr(&runPath);
+    std::string dirStr(runPath);
+
+    while (dirStr.find('\\') != dirStr.npos) {
+        size_t index = dirStr.find('\\');
+        dirStr[index] = '/';
+    }
+
+    // 往上两级
+    for (unsigned int i = 0; i < 2; i++) {
+        size_t index = dirStr.find_last_of('/');
+        if (index != dirStr.npos)
+            dirStr = dirStr.substr(0, index);
+        else
+            break;
+    }
+    
+    return dirStr + "/resources" + path;
 }
