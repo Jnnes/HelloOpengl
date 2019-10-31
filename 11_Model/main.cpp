@@ -38,7 +38,7 @@ float lastFrame = 0.0f;
 vector<float> dirLightData = {
                  // r,x     g,y     b,z
  /* amibent */      0.3f,   0.3f,   0.3f,
- /* diffuse */      1.0f,   1.0f,   1.0f,
+ /* diffuse */      0.5f,   0.5f,   0.5f,
  /* specular */     1.0f,   1.0f,   1.0f,
  /* direction */    -1.0f,  0.0f,   -1.0f,
 };

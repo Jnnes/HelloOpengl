@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_MultipleLights", "10_Mul
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_Model", "11_Model\Model.vcxproj", "{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_Test", "12_Test\Test.vcxproj", "{F31F1320-B0D5-498D-97A1-914EC82786AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -142,6 +144,14 @@ Global
 		{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}.Release|x64.Build.0 = Release|x64
 		{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}.Release|x86.ActiveCfg = Release|Win32
 		{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}.Release|x86.Build.0 = Release|Win32
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Debug|x64.ActiveCfg = Debug|x64
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Debug|x64.Build.0 = Debug|x64
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Debug|x86.ActiveCfg = Debug|Win32
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Debug|x86.Build.0 = Debug|Win32
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Release|x64.ActiveCfg = Release|x64
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Release|x64.Build.0 = Release|x64
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Release|x86.ActiveCfg = Release|Win32
+		{F31F1320-B0D5-498D-97A1-914EC82786AE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
