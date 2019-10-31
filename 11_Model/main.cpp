@@ -8,10 +8,12 @@
 #include <custom/shader.h>
 #include <custom/camer.h>
 #include <custom/Model.h>
+#include <custom/Light.h>
 
 #include <iostream>
 #include <direct.h>
 #include <stdio.h>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -20,8 +22,8 @@ void processInput(GLFWwindow *window);
 std::string getResPath(std::string);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1200;
+const unsigned int SCR_HEIGHT = 1000;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -32,6 +34,108 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+vector<float> dirLightData = {
+                 // r,x     g,y     b,z
+ /* amibent */      0.3f,   0.3f,   0.3f,
+ /* diffuse */      1.0f,   1.0f,   1.0f,
+ /* specular */     1.0f,   1.0f,   1.0f,
+ /* direction */    -1.0f,  0.0f,   -1.0f,
+};
+
+vector<vector<float>> pointLightsData = {
+    vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.05f,  0.05f,  0.05f,
+     /* diffuse */      0.8f,   0.8f,   0.8f,
+     /* specular */     1.0f,   1.0f,   1.0f,
+     /* position */     0.7f,   0.2f,   2.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.3f,   0.3f,   0.3f,
+     /* diffuse */      1.0f,   1.0f,   1.0f,
+     /* specular */     1.0f,   1.0f,   1.0f,
+     /* position */     2.3f,   -3.3f,  -4.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.3f,   0.3f,   0.3f,
+     /* diffuse */      1.0f,   1.0f,   1.0f,
+     /* specular */     1.0f,   1.0f,   1.0f,
+     /* position */     -4.0f,  2.0f,   -12.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.3f,   0.3f,   0.3f,
+     /* diffuse */      1.0f,   1.0f,   1.0f,
+     /* specular */     1.0f,   1.0f,   1.0f,
+     /* position */     0.0f,   0.0f,   -3.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+    },
+};
+
+vector<vector<float>> spotLightsData = {
+    vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.0f,   0.0f,  0.0f,
+     /* diffuse */      0.8f,   0.0f,   0.0f,
+     /* specular */     1.0f,   0.0f,   0.0f,
+     /* position */     -1.0f,   0.0f,   0.0f,
+                        1.0f,   0.09f,  0.032f, // constant linear quadratic
+     /* direction */    1.0f,   0.0f,   0.0f,
+                        22.5f,  25.0f,          // cutOff outCutOff
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.0f,   0.0f,   0.0f,
+     /* diffuse */      0.0f,   0.8f,   0.0f,
+     /* specular */     0.0f,   1.0f,   0.0f,
+     /* position */     1.0f,   0.0f,   0.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+     /* direction */    -1.0f,  0.0f,   0.0f,
+                        22.5f,  25.0f,          // cutOff outCutOff
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.0f,   0.0f,   0.0f,
+     /* diffuse */      0.0f,   0.0f,   0.8f,
+     /* specular */     0.0f,   0.0f,   1.0f,
+     /* position */     0.0f,   0.0f,   1.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+     /* direction */    0.0f,   0.0f,   -1.0f,
+                        22.5f,  25.0f,          // cutOff outCutOff
+    },
+        vector<float> {
+                     // r,x     g,y     b,z     
+     /* amibent */      0.0f,   0.0f,   0.0f,
+     /* diffuse */      1.0f,   1.0f,   1.0f,
+     /* specular */     1.0f,   1.0f,   1.0f,
+     /* position */     0.0f,   0.0f,   -1.0f,
+                        1.0f,   0.09f,  0.032f,// constant linear quadratic
+     /* direction */    0.0f,   0.0f,   1.0f,
+                        22.5f,  25.0f,          // cutOff outCutOff
+    },
+};
+
+DirLight dirLight;
+vector<PointLight> pointLights;
+vector<SpotLight> spotLights;
+
+void initLightData() {
+    dirLight = DirLight(dirLightData);
+
+    for (unsigned int i = 0; i < pointLightsData.size(); i++) {
+        pointLights.push_back(PointLight(pointLightsData[i]));
+    }
+
+    for (unsigned int i = 0; i < spotLightsData.size(); i++) {
+        spotLights.push_back(SpotLight(spotLightsData[i]));
+    }
+}
 
 int main()
 {
@@ -61,7 +165,7 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -85,6 +189,8 @@ int main()
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    initLightData();
 
     // render loop
     // -----------
@@ -121,6 +227,47 @@ int main()
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
+        // 定向光源
+        ourShader.setInt("dirLightNum", 1);
+        ourShader.setVec3("dirLight.direction", dirLight.direction);
+        ourShader.setVec3("dirLight.ambient", dirLight.ambient);
+        ourShader.setVec3("dirLight.diffuse", dirLight.diffuse); // 将光照调暗了一些以搭配场景
+        ourShader.setVec3("dirLight.specular", dirLight.specular);
+
+        // 点光源
+        ourShader.setInt("pointLightNum", pointLights.size());
+        std::string uniformNmae = "pointLights[0].";
+        for (int i = 0; i < pointLights.size(); i++) {
+            uniformNmae[12] = '0' + i;
+            std::string tempStr(uniformNmae);
+            ourShader.setVec3((tempStr + std::string("position")).c_str(), pointLights[i].position);
+
+            ourShader.setFloat((tempStr + std::string("constant")).c_str(), pointLights[i].constant);
+            ourShader.setFloat((tempStr + std::string("linear")).c_str(), pointLights[i].linear);
+            ourShader.setFloat((tempStr + std::string("quadratic")).c_str(), pointLights[i].quadratic);
+            ourShader.setVec3((tempStr + std::string("ambient")).c_str(), pointLights[i].ambient);
+            ourShader.setVec3((tempStr + std::string("diffuse")).c_str(), pointLights[i].diffuse);
+            ourShader.setVec3((tempStr + std::string("specular")).c_str(), pointLights[i].specular);
+        }
+
+        // 聚光
+        ourShader.setInt("spotLightNum", spotLights.size());
+        uniformNmae ="spotLights[0].";
+        for (unsigned int i = 0; i < spotLights.size(); i++) {
+            uniformNmae[11] = '0' + i;
+            std::string tempStr(uniformNmae);
+           
+            ourShader.setVec3((tempStr + std::string("direction")).c_str(), spotLights[i].direction);
+            ourShader.setVec3((tempStr + std::string("position")).c_str(), spotLights[i].position);
+            ourShader.setFloat((tempStr + std::string("cutOff")).c_str(), glm::cos(glm::radians(spotLights[i].cutOff)));
+            ourShader.setFloat((tempStr + std::string("outCutOff")).c_str(), glm::cos(glm::radians(spotLights[i].outCutOff)));
+            ourShader.setVec3((tempStr + std::string("ambient")).c_str(), spotLights[i].ambient);
+            ourShader.setVec3((tempStr + std::string("diffuse")).c_str(), spotLights[i].diffuse); // 将光照调暗了一些以搭配场景
+            ourShader.setVec3((tempStr + std::string("specular")).c_str(), spotLights[i].specular);
+            ourShader.setFloat((tempStr + std::string("constant")).c_str(), spotLights[i].constant);
+            ourShader.setFloat((tempStr + std::string("linear")).c_str(), spotLights[i].linear);
+            ourShader.setFloat((tempStr + std::string("quadratic")).c_str(), spotLights[i].quadratic);
+        }        
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

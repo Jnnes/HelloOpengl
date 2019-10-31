@@ -149,6 +149,14 @@
     <None Include="shader\model.frag" />
     <None Include="shader\model.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\camer.h" />
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Light.h" />
+    <ClInclude Include="..\Tools\OpenGl\include\custom\log.h" />
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Mesh.h" />
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Model.h" />
+    <ClInclude Include="..\Tools\OpenGl\include\custom\shader.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

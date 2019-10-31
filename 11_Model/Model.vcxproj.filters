@@ -56,4 +56,24 @@
       <Filter>资源文件\shader</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\camer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tools\OpenGl\include\custom\shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
