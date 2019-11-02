@@ -44,6 +44,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_TestAndFaceCull", "12_Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_FrameBuffer", "14_FrameBuffer\FrameBuffer.vcxproj", "{D77E07E6-CB61-4873-B124-F4E15CBBB537}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_Cubemaps", "15_Cubemaps\Cubemaps.vcxproj", "{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -172,6 +174,14 @@ Global
 		{D77E07E6-CB61-4873-B124-F4E15CBBB537}.Release|x64.Build.0 = Release|x64
 		{D77E07E6-CB61-4873-B124-F4E15CBBB537}.Release|x86.ActiveCfg = Release|Win32
 		{D77E07E6-CB61-4873-B124-F4E15CBBB537}.Release|x86.Build.0 = Release|Win32
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Debug|x64.ActiveCfg = Debug|x64
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Debug|x64.Build.0 = Debug|x64
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Debug|x86.ActiveCfg = Debug|Win32
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Debug|x86.Build.0 = Debug|Win32
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x64.ActiveCfg = Release|x64
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x64.Build.0 = Release|x64
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x86.ActiveCfg = Release|Win32
+		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
