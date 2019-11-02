@@ -184,7 +184,7 @@ int main()
 
     // load textures
     // -------------
-    unsigned int cubeTexture = loadTexture(getResPath("/textures/marble.jpg").c_str());
+    unsigned int cubeTexture = loadTexture(getResPath("/textures/container.jpg").c_str());
     unsigned int floorTexture = loadTexture(getResPath("/textures/metal.png").c_str());
 
     // shader configuration
@@ -194,7 +194,7 @@ int main()
 
     screenShader.use();
     screenShader.setInt("screenTexture", 0);
-
+    
     // framebuffer configuration
     // -------------------------
     unsigned int framebuffer;
@@ -231,7 +231,7 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
+       
         // input
         // -----
         processInput(window);
@@ -321,6 +321,10 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
