@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="资源文件\shader">
-      <UniqueIdentifier>{28a1daf2-8580-4672-91d3-f78ad030a3a0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,41 +24,6 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader\light.frag">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="shader\light.vert">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="shader\material.frag">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="shader\material.vert">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="shader\model.frag">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="shader\model.vert">
-      <Filter>资源文件\shader</Filter>
-    </None>
-    <None Include="2.stencil_single_color.fs">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="2.stencil_testing.fs">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="2.stencil_testing.vs">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="cube.frag">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="cube.vert">
-      <Filter>资源文件</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Tools\OpenGl\include\custom\camer.h">
@@ -82,5 +44,19 @@
     <ClInclude Include="..\Tools\OpenGl\include\custom\shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="6.1.cubemaps.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="6.1.cubemaps.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="6.1.skybox.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="6.1.skybox.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
