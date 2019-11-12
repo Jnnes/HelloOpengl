@@ -31,6 +31,13 @@ GLfloat vertices1[] = {
     0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f 
 };
 
+float points[] = {
+    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // 左上
+     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // 右上
+     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // 右下
+    -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // 左下
+};
+
 GLuint indices[] = {
     0,1,2,
 };
@@ -77,11 +84,12 @@ int main(void) {
         Log::i<std::string>(std::string(TAG), "max vertex attributes supportes:",std::to_string(nrAttributes));
     } 
 
-    Shader shader("shader/shader.vert", "shader/shader.frag");
-    Shader shader1("shader/shader1.vert", "shader/shader1.frag");
-    Shader shader2("shader/flip.vert", "shader/shader.frag"); //翻转效果
-    Shader shader3("shader/move.vert", "shader/shader.frag");//移动顶点
-    Shader shader4("shader/move.vert", "shader/positionColor.frag"); //颜色与位置相关
+    //Shader shader("shader/shader.vert", "shader/shader.frag");
+    //Shader shader1("shader/shader1.vert", "shader/shader1.frag");
+    //Shader shader2("shader/flip.vert", "shader/shader.frag"); //翻转效果
+    //Shader shader3("shader/move.vert", "shader/shader.frag");//移动顶点
+    //Shader shader4("shader/move.vert", "shader/positionColor.frag"); //颜色与位置相关
+    Shader geoShader("shader/geo.vert", "shader/geo.frag", "shader/geo.gs");
 
     GLuint VAO;
     glGenVertexArrays(1, &VAO);
@@ -120,33 +128,51 @@ int main(void) {
     glEnableVertexAttribArray(1);    
     glBindVertexArray(0);
 
+    GLuint geoVAO;
+    glGenVertexArrays(1, &geoVAO);
+    glBindVertexArray(geoVAO);
+    GLuint geoVBO;
+    glGenBuffers(1, &geoVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, geoVBO);
+    // 从此刻起，我们使用的任何在GL_ARRAY_BUFFER目标上的缓冲调用都会用来配置当前VBO
+    // 然后我们可以调用GLBufferData函数，他会把之前定义的顶点数据复制到缓冲的内存中
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
         glClear(GL_COLOR_BUFFER_BIT); //其他还有深度缓冲，模板缓冲
-
         
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         //
         // .. 绘制物体
         //glDrawArrays(GL_TRIANGLES, 0, 3);  
-        auto shaderTemp = shader3; //分别执行shader为0,2,3,4显示不同效果
-        shaderTemp.use();
-        GLfloat timeValue = glfwGetTime();
-        GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-        GLfloat xOffset = greenValue;
-        GLfloat yOffset = (sin(timeValue * 3) / 2);
-        glUniform4f(glGetUniformLocation(shaderTemp.Program, "ourColor"), 0.0f, greenValue, 0.0f, 1.0f); // 必须先使用shaderpragram
-        glUniform2f(glGetUniformLocation(shaderTemp.Program, "moveOffset"), xOffset, yOffset);   
+        //auto shaderTemp = shader3; //分别执行shader为0,2,3,4显示不同效果
+        //shaderTemp.use();
+        //GLfloat timeValue = glfwGetTime();
+        //GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
+        //GLfloat xOffset = greenValue;
+        //GLfloat yOffset = (sin(timeValue * 3) / 2);
+        //glUniform4f(glGetUniformLocation(shaderTemp.Program, "ourColor"), 0.0f, greenValue, 0.0f, 1.0f); // 必须先使用shaderpragram
+        //glUniform2f(glGetUniformLocation(shaderTemp.Program, "moveOffset"), xOffset, yOffset);   
 
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
+        //glBindVertexArray(VAO);
+        //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
 
-        shader1.use();
-        glBindVertexArray(VAO1);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
-        // 
-        glBindVertexArray(0);
+        //shader1.use();
+        //glBindVertexArray(VAO1);
+        //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
+        //// 
+        //glBindVertexArray(0);
+
+        glBindVertexArray(geoVAO);
+        geoShader.use();
+        glDrawArrays(GL_POINTS, 0, 4);
 
         glfwSwapBuffers(window);
     }

@@ -52,5 +52,14 @@
     <None Include="shader\positionColor.frag">
       <Filter>资源文件\Shader</Filter>
     </None>
+    <None Include="shader\geo.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\geo.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\geo.vert">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
