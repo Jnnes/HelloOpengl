@@ -89,7 +89,8 @@ int main(void) {
     //Shader shader2("shader/flip.vert", "shader/shader.frag"); //翻转效果
     //Shader shader3("shader/move.vert", "shader/shader.frag");//移动顶点
     //Shader shader4("shader/move.vert", "shader/positionColor.frag"); //颜色与位置相关
-    Shader geoShader("shader/geo.vert", "shader/geo.frag", "shader/geo.gs");
+    Shader geoShader("shader/geo.vert", "shader/geo.frag");
+    geoShader.addGeometryShader("shader/geo.gs");
 
     GLuint VAO;
     glGenVertexArrays(1, &VAO);

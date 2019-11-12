@@ -96,6 +96,50 @@ public:
             glDeleteShader(geometry);
 
     }
+    
+    void addGeometryShader(const GLchar* geomPath) {
+        std::string geometryCode;
+        std::ifstream gShaderFile;
+        gShaderFile.exceptions(std::ifstream::badbit);
+        try {
+            gShaderFile.open(geomPath);
+            std::stringstream  gShaderStream;
+            gShaderStream << gShaderFile.rdbuf();
+            gShaderFile.close();
+            geometryCode = gShaderStream.str();
+        }
+        catch (std::ifstream::failure e) {
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+        }
+
+        const GLchar* gShaderCode = geometryCode.c_str();
+
+        GLuint geometry;
+        GLint success;
+        GLchar infoLog[512];
+
+        //创建并编译几何着色器
+        geometry = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometry, 1, &gShaderCode, NULL);
+        glCompileShader(geometry);
+        glGetShaderiv(geometry, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(geometry, 512, NULL, infoLog);
+            std::cout << "ERROE::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
+        else {
+            std::cout << "Successfully compile shader, path:" << geomPath << std::endl;
+        }
+
+        //创建着色器程序，attachs着色器并link
+        glAttachShader(this->ID, geometry);
+        glLinkProgram(this->ID);
+
+        std::cout << "Link GeometryShader" << std::endl;
+
+        //已经link，删除着色器
+        glDeleteShader(geometry);
+    }
     // activate the shader
     // ------------------------------------------------------------------------
     void use()

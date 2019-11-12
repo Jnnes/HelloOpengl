@@ -165,7 +165,7 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -182,6 +182,10 @@ int main()
     // build and compile shaders
     // -------------------------
     Shader ourShader("shader/model.vert", "shader/model.frag");
+    Shader explodeShader("shader/explode.vert", "shader/explode.frag");
+    explodeShader.addGeometryShader("shader/explode.gs");
+    Shader normalShader("shader/normalDisplay.vert", "shader/normalDisplay.frag");
+    normalShader.addGeometryShader("shader/normalDisplay.gs");
 
     // load models
     // -----------
@@ -213,19 +217,12 @@ int main()
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-
+        ourShader.setFloat("time", currentFrame);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
-
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
 
         // 定向光源
         ourShader.setInt("dirLightNum", 1);
@@ -252,11 +249,11 @@ int main()
 
         // 聚光
         ourShader.setInt("spotLightNum", spotLights.size());
-        uniformNmae ="spotLights[0].";
+        uniformNmae = "spotLights[0].";
         for (unsigned int i = 0; i < spotLights.size(); i++) {
             uniformNmae[11] = '0' + i;
             std::string tempStr(uniformNmae);
-           
+
             ourShader.setVec3((tempStr + std::string("direction")).c_str(), spotLights[i].direction);
             ourShader.setVec3((tempStr + std::string("position")).c_str(), spotLights[i].position);
             ourShader.setFloat((tempStr + std::string("cutOff")).c_str(), glm::cos(glm::radians(spotLights[i].cutOff)));
@@ -267,7 +264,20 @@ int main()
             ourShader.setFloat((tempStr + std::string("constant")).c_str(), spotLights[i].constant);
             ourShader.setFloat((tempStr + std::string("linear")).c_str(), spotLights[i].linear);
             ourShader.setFloat((tempStr + std::string("quadratic")).c_str(), spotLights[i].quadratic);
-        }        
+        }
+
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model);
+        ourModel.Draw(ourShader);        
+
+        normalShader.use();
+        normalShader.setMat4("projection", projection);
+        normalShader.setMat4("view", view);
+        normalShader.setMat4("model", model);
+        ourModel.Draw(normalShader);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

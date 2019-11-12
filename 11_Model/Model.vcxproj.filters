@@ -55,6 +55,24 @@
     <None Include="shader\model.vert">
       <Filter>资源文件\shader</Filter>
     </None>
+    <None Include="shader\explode.gs">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\explode.frag">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\explode.vert">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\normalDisplay.frag">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\normalDisplay.gs">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="shader\normalDisplay.vert">
+      <Filter>资源文件\shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Tools\OpenGl\include\custom\camer.h">

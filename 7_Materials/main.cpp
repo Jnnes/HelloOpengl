@@ -1,10 +1,14 @@
-﻿#define GLEW_STATIC
-#include <glew/glew.h>
-#include<GLFW/glfw3.h>
-#include<soil/SOIL.h>
+﻿#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <stb_image.h>
+
 #include <glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <custom/shader.h>
+#include <custom/camer.h>
+#include <custom/Model.h>
 
 #include<Windows.h>
 #include<iostream>
@@ -143,13 +147,13 @@ int main(void) {
 
     glfwMakeContextCurrent(window);
 
-    //从GLFW中获取视口的维度而不设置为800*600
-    //是为了让它在高DPI的屏幕上（比如说Apple的视网膜显示屏）也能正常工作。
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+    ////从GLFW中获取视口的维度而不设置为800*600
+    ////是为了让它在高DPI的屏幕上（比如说Apple的视网膜显示屏）也能正常工作。
+    //int width, height;
+    //glfwGetFramebufferSize(window, &width, &height);
+    //glViewport(0, 0, width, height);
 
-    if (glewInit()) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         Log::e(TAG, "Failed init glew");
     }
     else {
@@ -219,16 +223,16 @@ int main(void) {
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f));
         lightShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // 渲染物体
         shader1.use();        
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         
         shader1.setVec3("material.ambient", 0.0215f, 0.1745f, 0.0215f);
         shader1.setVec3("material.diffuse", 0.07568f, 0.61424f, 0.07568f);
@@ -253,7 +257,7 @@ int main(void) {
                 //modeltemp = glm::rotate(modeltemp, glm::radians(angle), glm::vec3(1.0f, 0.5f, 0.5f));
             }           
 
-            glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "model"), 1, GL_FALSE,glm::value_ptr(modeltemp));
+            glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "model"), 1, GL_FALSE,glm::value_ptr(modeltemp));
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
         }
         
