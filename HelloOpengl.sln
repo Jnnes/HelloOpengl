@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "0_HelloTriangle", "0_HelloTriangle\HelloTriangle.vcxproj", "{CEEE264F-82F8-4A16-B564-DDE802106B47}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_HelloShader", "1_HelloShader\HelloShader.vcxproj", "{B8B0695B-29EB-41C5-8B57-EF5EE64E0811}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_HelloShaderAndGeometryShaderBase", "1_HelloShader\HelloShader.vcxproj", "{B8B0695B-29EB-41C5-8B57-EF5EE64E0811}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{649A2151-4171-458E-832C-2DB1F2B3C6A3}"
 	ProjectSection(SolutionItems) = preProject
@@ -36,7 +36,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "9_LightCasters", "9_LightCa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_MultipleLights", "10_MultipleLights\MultipleLights.vcxproj", "{B01E7E7A-9578-495B-9EF1-44DC8975E674}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_Model", "11_Model\Model.vcxproj", "{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_ModelAndNormalGeometryShader", "11_Model\Model.vcxproj", "{3FBAE6CF-0216-494E-ACD2-60F2D7DC30A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_Blend", "13_Blend\Blend.vcxproj", "{CD2E7ACB-A1AC-4BD7-B932-FEA60BD5A5CE}"
 EndProject
@@ -45,6 +45,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_FrameBuffer", "14_FrameBuffer\FrameBuffer.vcxproj", "{D77E07E6-CB61-4873-B124-F4E15CBBB537}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_Cubemaps", "15_Cubemaps\Cubemaps.vcxproj", "{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_Instance", "16_Instance\Instance.vcxproj", "{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +184,14 @@ Global
 		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x64.Build.0 = Release|x64
 		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x86.ActiveCfg = Release|Win32
 		{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}.Release|x86.Build.0 = Release|Win32
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Debug|x64.ActiveCfg = Debug|x64
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Debug|x64.Build.0 = Debug|x64
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Debug|x86.ActiveCfg = Debug|Win32
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Debug|x86.Build.0 = Debug|Win32
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x64.ActiveCfg = Release|x64
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x64.Build.0 = Release|x64
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x86.ActiveCfg = Release|Win32
+		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
