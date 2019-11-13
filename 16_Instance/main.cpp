@@ -75,20 +75,6 @@ int main(void) {
     // shader
     Shader shader("Shader/instance.vert", "Shader/instance.frag");
 
-    // vao
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-    glBindVertexArray(0);
-
     // 准备数据
     glm::vec2 translations[100];
     int index = 0;
@@ -101,6 +87,38 @@ int main(void) {
             translations[index++] = translation;
         }
     }
+    /*shader.use();
+    for (int i = 0; i < 100; i++) {
+        std::stringstream strstr;
+        strstr << i;
+        std::string tempStr;
+        strstr >> tempStr;
+
+        shader.setVec2("translate[" + tempStr + "]", translations[i]);
+    }*/
+
+    // vao
+    GLuint VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    GLuint instanceVBO;
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 100, &translations[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *)0);
+    glEnableVertexAttribArray(2);
+    glVertexAttribDivisor(2, 1); // 告诉了OpenGL该什么时候更新顶点属性的内容至新一组数据
+    glBindVertexArray(0);    
+
     int fps = 0;
     int time = 0;
     int lastTime = 0;
@@ -120,10 +138,12 @@ int main(void) {
         // draw
         shader.use();
         glBindVertexArray(VAO);
-        for (int i = 0; i < 100; i++) {
-            shader.setVec2("translate", translations[i]);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }        
+        //for (int i = 0; i < 100; i++) { // 使用标准方法绘制
+        //    shader.setVec2("translate", translations[i]);
+        //    glDrawArrays(GL_TRIANGLES, 0, 6);            
+        //}
+        
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
 
         glfwSwapBuffers(window);
     }
