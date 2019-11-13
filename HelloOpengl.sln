@@ -46,7 +46,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_FrameBuffer", "14_FrameB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_Cubemaps", "15_Cubemaps\Cubemaps.vcxproj", "{B912D7B1-9AF9-4FAB-8CEA-A37AAAA253B0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_Instance", "16_Instance\Instance.vcxproj", "{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_InstanceBase", "16_Instance\Instance.vcxproj", "{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17_InstanceModel", "17_InstanceModel\InstanceModel.vcxproj", "{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -192,6 +194,14 @@ Global
 		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x64.Build.0 = Release|x64
 		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x86.ActiveCfg = Release|Win32
 		{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}.Release|x86.Build.0 = Release|Win32
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Debug|x64.ActiveCfg = Debug|x64
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Debug|x64.Build.0 = Debug|x64
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Debug|x86.Build.0 = Debug|Win32
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x64.ActiveCfg = Release|x64
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x64.Build.0 = Release|x64
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x86.ActiveCfg = Release|Win32
+		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
