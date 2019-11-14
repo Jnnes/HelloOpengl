@@ -1,5 +1,4 @@
-﻿#define GLEW_STATIC
-#include <glew/glew.h>
+﻿#include <glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<soil/SOIL.h>
 #include <glm/glm.hpp>
@@ -143,20 +142,12 @@ int main(void) {
 
     glfwMakeContextCurrent(window);
 
-    //从GLFW中获取视口的维度而不设置为800*600
-    //是为了让它在高DPI的屏幕上（比如说Apple的视网膜显示屏）也能正常工作。
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-
-    if (glewInit()) {
-        Log::e(TAG, "Failed init glew");
-    }
-    else {
-        Log::i(TAG, "Init glew success");
-        GLint nrAttributes;
-        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-        Log::i<std::string>(std::string(TAG), "max vertex attributes supportes:", std::to_string(nrAttributes));
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
     }
 
     GLuint lightVAO;
@@ -171,7 +162,6 @@ int main(void) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void *)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
-
 
     GLuint VAO1;
     glGenVertexArrays(1, &VAO1);
@@ -218,21 +208,22 @@ int main(void) {
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f));
         lightShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         shader1.use();        
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));               
-        glUniform3fv(glGetUniformLocation(shader1.Program, "objectColor"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "lightPos"), 1, glm::value_ptr(lightPos));
-        glUniform3fv(glGetUniformLocation(shader1.Program, "viewPos"), 1, glm::value_ptr(cameraPos));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniform3fv(glGetUniformLocation(shader1.ID, "objectColor"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
+        glUniform3fv(glGetUniformLocation(shader1.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+        glUniform3fv(glGetUniformLocation(shader1.ID, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(glGetUniformLocation(shader1.ID, "viewPos"), 1, glm::value_ptr(cameraPos));
         glBindVertexArray(VAO1);
 
+        glEnable(GL_FRAMEBUFFER_SRGB); // 只在绘制立方体时开启gamma矫正
         int count = 0;
         for (int i = 0; i < 1; i++) {
             glm::mat4 modeltemp;
@@ -243,13 +234,13 @@ int main(void) {
                 //modeltemp = glm::rotate(modeltemp, glm::radians(angle), glm::vec3(1.0f, 0.5f, 0.5f));
             }           
 
-            glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "model"), 1, GL_FALSE,glm::value_ptr(modeltemp));
+            glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "model"), 1, GL_FALSE,glm::value_ptr(modeltemp));
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
         }
-        
+        glDisable(GL_FRAMEBUFFER_SRGB);// 只在绘制立方体时开启gamma矫正
         glBindVertexArray(0);
-
-        glfwSwapBuffers(window);        
+        
+        glfwSwapBuffers(window);         
     }
 
     glfwTerminate();
