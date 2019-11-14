@@ -86,7 +86,7 @@ int main()
 
     // generate a large list of semi-random model transformation matrices
     // ------------------------------------------------------------------
-    unsigned int amount = 100000;
+    unsigned int amount = 10000;
     glm::mat4* modelMatrices;
     modelMatrices = new glm::mat4[amount];
     srand(glfwGetTime()); // initialize random seed	

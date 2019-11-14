@@ -217,8 +217,7 @@ int main()
     // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);    
     // draw as wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

@@ -18,4 +18,5 @@ void main()
 	vec2 TexCoord2 = vec2(cos(a) * TexCoord.x - sin(a)*TexCoord.y, TexCoord.x * sin(a) + TexCoord.y * cos(a));
 	
     fragColor = mix(texture(ourTexture1, TexCoord), texture(ourTexture2, TexCoord2), opcity);
+	fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

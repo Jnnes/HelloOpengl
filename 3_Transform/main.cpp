@@ -1,17 +1,24 @@
-﻿#define GLEW_STATIC
-#include <glew/glew.h>
-#include<GLFW/glfw3.h>
-#include<soil/SOIL.h>
-#include <glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtc/type_ptr.hpp>
+﻿#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <stb_image.h>
 
-#include<Windows.h>
-#include<iostream>
-#include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <custom/shader.h>
+#include <custom/camer.h>
+#include <custom/Model.h>
+
+#include <iostream>
 #include <custom/log.h>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+std::string getResPath(std::string path);
+unsigned int loadTexture(const char *path);
+// settings
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 static const char TAG[] = "MAIN";
 
@@ -55,42 +62,40 @@ GLfloat texCoords[] = {
 };
 
 int main(void) {
-    Log::i("start ----------");
-
+    // glfw: initialize and configure
+    // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_SAMPLES, 8);
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, windowsTitles, nullptr, nullptr);
-    if (window == nullptr)
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+#endif
+
+    // glfw window creation
+    // --------------------
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    if (window == NULL)
     {
-        Log::e(TAG, "Faild to create GLFW window");
-        
+        std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
-    }else
-        Log::i(TAG, "Create window success");
-
+    }
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
-    //从GLFW中获取视口的维度而不设置为800*600
-    //是为了让它在高DPI的屏幕上（比如说Apple的视网膜显示屏）也能正常工作。
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-    glfwSetKeyCallback(window, key_callback);
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
-    if (glewInit()){        
-        Log::e(TAG, "Failed init glew");
-    }        
-    else{        
-        Log::i(TAG, "Init glew success");
-        GLint nrAttributes;
-        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-        Log::i<std::string>(std::string(TAG), "max vertex attributes supportes:",std::to_string(nrAttributes));
-    }        
+    // 开启多重采样缓冲（Multisample Buffer）
+    glEnable(GL_MULTISAMPLE);
 
     GLuint VAO;
     glGenVertexArrays(1, &VAO);
@@ -132,28 +137,12 @@ int main(void) {
     glBindVertexArray(0);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // 禁用4字节对齐
-    int widthImg, heightImg;
-    unsigned char* image = SOIL_load_image("container.png", &widthImg, &heightImg, 0, SOIL_LOAD_RGB);  
     glActiveTexture(GL_TEXTURE0);
-    GLuint texture;//声明纹理对象ID
-    glGenTextures(1, &texture);//创建一个纹理对象    
-    glBindTexture(GL_TEXTURE_2D, texture);//绑定纹理对象，后面对纹理的操作都是在这个纹理ID上
-    //从图片数据中生成纹理，放到之前绑定的纹理对象中
-    //第二个参数时0表示只生成Mipmap中0级别的纹理，如果需要生成其他级别的修改0即可
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);//使用之前的纹理对象创建Mipmap，生成所有级别的Mipmap
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0);//解绑
+    GLuint texture = loadTexture("container.png");
 
-    int widthImg1, heightImg1,channels;
-    unsigned char* image1 = SOIL_load_image("awesomeface.png", &widthImg1, &heightImg1, &channels, SOIL_LOAD_RGB);    
     glActiveTexture(GL_TEXTURE1);
-    GLuint texture1;
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg1, heightImg1, 0, GL_RGB, GL_UNSIGNED_BYTE, image1);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-    SOIL_free_image_data(image1);
+    GLuint texture1 = loadTexture("awesomeface.png");
+
     float borderColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -167,6 +156,19 @@ int main(void) {
     
     Shader shader1("shader/shader1.vert", "shader/shader1.frag");
         
+    glm::mat4 model;
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    //model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+    // 创建观察矩阵将顶点从世界坐标系转换到是相机坐标系
+    // 这里只是模拟摄像机在[0， 0， 3]位置，所以该观察矩阵是将物体往屏幕里平移3个单位
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    // 创建透视投影矩阵，将相机坐标系中的顶点转换到裁剪空间（平面，二维）
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), (GLfloat)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);       
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
@@ -184,22 +186,28 @@ int main(void) {
         shader1.use();   
         glActiveTexture(GL_TEXTURE0); // 因为上面创建纹理时绑定了一次，但是修改完纹理后马上解绑了，所以这里必须重新绑定
         glBindTexture(GL_TEXTURE_2D, texture);
-        glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture1"), 0);
+        glUniform1i(glGetUniformLocation(shader1.ID, "ourTexture1"), 0);
 
         glActiveTexture(GL_TEXTURE1);// 因为上面创建纹理时绑定了一次，但是修改完纹理后马上解绑了，所以这里必须重新绑定
         glBindTexture(GL_TEXTURE_2D, texture1);
-        glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture2"), 1);
+        glUniform1i(glGetUniformLocation(shader1.ID, "ourTexture2"), 1);
 
         GLfloat timeValue = (GLfloat)glfwGetTime();
-        glUniform1f(glGetUniformLocation(shader1.Program, "angle"), 10 * timeValue); // 输入参数设置旋转角度
+        glUniform1f(glGetUniformLocation(shader1.ID, "angle"), 10 * timeValue); // 输入参数设置旋转角度
 
-        glUniform1f(glGetUniformLocation(shader1.Program, "opcity"), opcity); // 按键控制的透明度
+        glUniform1f(glGetUniformLocation(shader1.ID, "opcity"), opcity); // 按键控制的透明度
+
+        glm::mat4 modeltemp;
+        modeltemp = glm::rotate(model, glm::radians(timeValue * 5), glm::vec3(0.5f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "model"), 1, GL_FALSE, glm::value_ptr(modeltemp));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glm::mat4 trans;
         trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0));
         trans = glm::rotate(trans, glm::radians(3.0f * timeValue), glm::vec3(0.0, 0.0, 1.0));
         trans = glm::scale(trans, glm::vec3(1.2, 1.2, 1.2));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "trans"),1, GL_FALSE, glm::value_ptr(trans));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "trans"),1, GL_FALSE, glm::value_ptr(trans));
 
         glBindVertexArray(VAO1);        
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
@@ -209,7 +217,7 @@ int main(void) {
         glm::mat4 trans1;
         trans1 = glm::translate(trans1, glm::vec3(-0.5f, 0.5f, 0.0f));
         trans1 = glm::scale(trans1, glm::vec3(scale, scale, scale));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.Program, "trans"), 1, GL_FALSE, glm::value_ptr(trans1));
+        glUniformMatrix4fv(glGetUniformLocation(shader1.ID, "trans"), 1, GL_FALSE, glm::value_ptr(trans1));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
         // 
         glBindVertexArray(0);
@@ -221,17 +229,73 @@ int main(void) {
     return 0;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }else if(key == GLFW_KEY_UP && action == GLFW_PRESS) {
-        opcity += 0.03f;
-        if (opcity > 1.005f)
-            opcity = 1.0f;
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+// utility function for loading a 2D texture from file
+// ---------------------------------------------------
+unsigned int loadTexture(char const * path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
     }
-    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-        opcity -= 0.03f;
-        if (opcity < 0.005f)
-            opcity = 0.0f;
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
     }
+
+    return textureID;
+}
+
+
+std::string getResPath(std::string path) {
+    char *runPath = new char[256];
+    _get_pgmptr(&runPath);
+    std::string dirStr(runPath);
+
+    while (dirStr.find('\\') != dirStr.npos) {
+        size_t index = dirStr.find('\\');
+        dirStr[index] = '/';
+    }
+
+    // 往上两级
+    for (unsigned int i = 0; i < 2; i++) {
+        size_t index = dirStr.find_last_of('/');
+        if (index != dirStr.npos)
+            dirStr = dirStr.substr(0, index);
+        else
+            break;
+    }
+
+    return dirStr + "/resources" + path;
 }
