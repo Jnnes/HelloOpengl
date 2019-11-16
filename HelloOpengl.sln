@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2_Texture", "2_Texture\Texture.vcxproj", "{9E677E50-529F-40A6-B654-2A738ED54F56}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3_Transform", "3_Transform\Transform.vcxproj", "{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3_TransformAndMultiSample", "3_Transform\Transform.vcxproj", "{4EB47128-DDC8-4259-B0A3-ADFB8E4BE2FC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4_CoordinateSystem", "4_CoordinateSystem\CoordinateSystem.vcxproj", "{269EC74A-F4A1-4103-BE85-FE8E34EAE8D9}"
 EndProject
@@ -49,6 +49,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_InstanceBase", "16_Instance\Instance.vcxproj", "{DCBEB29E-D809-4DF8-8507-A78E0BA0AF62}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17_InstanceModel", "17_InstanceModel\InstanceModel.vcxproj", "{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18_PointShadows", "18_PointShadows\PointShadows.vcxproj", "{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -202,6 +204,14 @@ Global
 		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x64.Build.0 = Release|x64
 		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x86.ActiveCfg = Release|Win32
 		{D87FD1BC-353A-46D3-8497-B7DC9ACC36DD}.Release|x86.Build.0 = Release|Win32
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Debug|x64.ActiveCfg = Debug|x64
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Debug|x64.Build.0 = Debug|x64
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Debug|x86.ActiveCfg = Debug|Win32
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Debug|x86.Build.0 = Debug|Win32
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Release|x64.ActiveCfg = Release|x64
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Release|x64.Build.0 = Release|x64
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Release|x86.ActiveCfg = Release|Win32
+		{88BE7CB2-A8AB-46B1-8156-C8450EDB64AE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
