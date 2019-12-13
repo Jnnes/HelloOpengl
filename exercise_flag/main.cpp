@@ -76,6 +76,22 @@ int main() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+    int colCount = 800; // X轴 被裁成几份
+    int rowCount = 500;   // Y轴 被裁成几份
+    float XDet = 1.0 / colCount;
+    float YDet = 1.0 / rowCount;
+
+    // 创建MVP矩阵
+    glm::mat4 model;
+    model = glm::scale(model, glm::vec3(XDet, YDet, max(XDet, YDet)));
+
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+    view = glm::rotate(view, glm::radians(-20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), (GLfloat)SCR_WIDTH / (GLfloat)SCR_HEIGHT, 0.1f, 100.0f);
+
     GLuint VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -91,35 +107,22 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (GLvoid*)0);
     glEnableVertexAttribArray(0);
-
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
-    
-    int count = 150; // 旗帜横竖分成10分，总共100个
-    float det = 1.0 / count;
-
-    // 创建MVP矩阵
-    vector< glm::mat4> modelVec;
-    for (int i = 0; i < count; i++) {
-        for (int j = 0; j < count; j++) {
-            glm::mat4 model;
-            model = glm::translate(model, glm::vec3(i * det - 0.5f, j * det - 0.5, 0.0f));
-            model = glm::scale(model, glm::vec3(det, det, det));
-            modelVec.push_back(model);
-        }
-    }
-
-    glm::mat4 view;
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-    view = glm::rotate(view, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), (GLfloat)SCR_WIDTH / (GLfloat)SCR_HEIGHT, 0.1f, 100.0f);
-    
+     
+    GLfloat lastTime = -1.0;
+    int count = 0;
+    int det = 2;
     while (!glfwWindowShouldClose(window)) {
         GLfloat timeValue = (GLfloat)glfwGetTime();
+        if (timeValue - lastTime > det) {            
+            std::cout << "fps = " << to_string(count / det) << std::endl;
+            count = 0;
+            lastTime = timeValue;
+        }
+        count++;       
 
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置默认颜色
@@ -133,20 +136,14 @@ int main() {
         flagShader.setMat4("view", view);
         flagShader.setMat4("projection", projection);
         flagShader.setFloat("time", timeValue);
-        flagShader.setFloat("count", (GLfloat)count);
+        flagShader.setFloat("colCount", (GLfloat)colCount);
+        flagShader.setFloat("rowCount", (GLfloat)rowCount);
+        flagShader.setMat4("model", model);
         glUseProgram(flagShader.ID);
 
-        for (int i = 0; i < count; i++) {
-            flagShader.setFloat("row", (GLfloat)i);
-            for (int j = 0; j < count; j++) {                
-                flagShader.setFloat("col", (GLfloat)j);
-                flagShader.setMat4("model", modelVec[i * count + j]);
-                glBindVertexArray(VAO);
-                glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, (void*)0);
-            }
-        }
+        glBindVertexArray(VAO);
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, colCount * rowCount);
 
-        // 
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
@@ -199,6 +196,7 @@ unsigned int loadTexture(char const * path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
         stbi_image_free(data);
     }

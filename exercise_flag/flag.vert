@@ -10,18 +10,35 @@ uniform mat4 view;
 uniform mat4 projection;
 
 uniform float time;
-uniform float col; // 列
-uniform float row; // 行
-uniform float count; // 行列拆分数
+uniform float colCount;// 列的数目, X轴被分段数目
+uniform float rowCount;// 行的数目，Y轴被分段数目
 
 void main()
-{
+{		
+	float Y = floor(gl_InstanceID / colCount); 
+	float X = floor(gl_InstanceID - Y * colCount);
+
 	FragPos = aPos;
-	float det = 1.0 / count;
-	TexCoords = vec2(row * det,1.0 - (col + 1) * det) + aTexCoords / count;
+	float XDet = 1.0 / colCount;
+	float YDet = 1.0 / rowCount;
+
+	// 计算纹理坐标
+	TexCoords = vec2(X * XDet,1.0 - (Y + 1) * YDet) + vec2(aTexCoords.x / colCount,aTexCoords.y / rowCount);
+	//TexCoords = aTexCoords;
+
+	vec3 pos = aPos;		
+	pos.x += -colCount / 2 + X + 0.5;
+	pos.y += -rowCount / 2 + Y + 0.5;
+
+	// 越靠近旗杆频率越大，波长越短
+	float ZDet = 1.0 / max(XDet, YDet) * X /colCount;
+	float XN = 1.7;
+	float YN = 0.4;
 	
-	vec3 pos = aPos;
-	pos.z = 10.0 * row /count * sin(time + 3.0 * 3.1416 * (count - row) / count);
+	pos.z += 0.3 * ZDet  * sin(time + XN * 6.283 * ((colCount - X) * (colCount - X) / colCount /colCount) + 0.2);
+	pos.z += 0.2 * ZDet * sin(time + YN * 6.283 * (Y / rowCount + 0.2) );
+
+	// 增加乱风的扰动
 
 	gl_Position = projection * view * model * vec4(pos, 1.0);
 };
