@@ -14,13 +14,24 @@
 #include <custom/log.h>
 
 const char windowsTitles[] = "HelloTriangle";
+struct TextureStruct
+{
+    GLuint id;
+    GLuint width;
+    GLuint height;
+    TextureStruct(GLuint id, GLuint width, GLuint height) {
+        this->id = id;
+        this->width = width;
+        this->height = height;
+    }
+};
 
 ////定义函数原型
 //typedef void(*GL_GENBUFFERS) (GLsizei, GLuint*);
 //
 ////找到正确的函数并赋值给指针
 //GL_GENBUFFERS glGenBuffers = (GL_GENBUFFERS)wglGetProcAddress("glGenBuffers");
-unsigned int loadTexture(char const * path);
+TextureStruct loadTexture(char const * path);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow*, int, int, int, int);
 const unsigned int SCR_WIDTH = 1280;
@@ -71,14 +82,17 @@ int main() {
         
     Shader flagShader("flag.vert", "flag.frag");
 
-    GLuint texture = loadTexture("flag.jpg");   
+    TextureStruct textureStruct = loadTexture("flag1.jpg");
+    GLuint texture = textureStruct.id;
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
     int colCount = 800; // X轴 被裁成几份
     int rowCount = 500;   // Y轴 被裁成几份
-    float XDet = 1.0 / colCount;
+
+    // 保证渲染出来的图片横纵比与原图片一致
+    float XDet = 1.0 * textureStruct.width/ textureStruct.height / colCount;
     float YDet = 1.0 / rowCount;
 
     // 创建MVP矩阵
@@ -171,7 +185,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
-unsigned int loadTexture(char const * path)
+TextureStruct loadTexture(char const * path)
 {
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -206,5 +220,5 @@ unsigned int loadTexture(char const * path)
         stbi_image_free(data);
     }
 
-    return textureID;
+    return TextureStruct(textureID, width, height);
 }
