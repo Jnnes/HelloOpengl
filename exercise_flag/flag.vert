@@ -43,11 +43,14 @@ void main()
 	// 越靠近旗杆频率越大，波长越短
 	float ZDet = 1.0 / max(XDet, YDet) * X /colCount;
 	float XN = 1.7;
-	float YN = 0.5;
+	float YN = 0.3;
 	
 	// 增加乱风的扰动，从XY两个方向考虑，通过调整两个方向的波长与强度模拟
 	pos.z += 0.3 * ZDet  * sin(3 * time + XN * 6.283 * ((colCount - X) * (colCount - X) / colCount /colCount) + 0.2);
-	pos.z += 0.2 * ZDet * sin(2 * time + YN * 6.283 * (Y / rowCount + 0.2) );
+	pos.z += 0.1 * ZDet * sin(2.7 * time + YN * 6.283 * (Y / rowCount + 0.5) );
+
+	YN = 0.9;
+	pos.z += 0.1 * ZDet * sin(2.7 * time + YN * 6.283 * (Y / rowCount + 0.5) );
 
 
 	gl_Position = projection * view * model * vec4(pos, 1.0);

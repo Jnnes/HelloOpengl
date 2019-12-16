@@ -82,7 +82,7 @@ int main() {
         
     Shader flagShader("flag.vert", "flag.frag");
 
-    TextureStruct textureStruct = loadTexture("flag1.jpg");
+    TextureStruct textureStruct = loadTexture("flag.png");
     GLuint texture = textureStruct.id;
 
     glActiveTexture(GL_TEXTURE0);
