@@ -1,9 +1,10 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoords;
+layout (location = 1) in vec4 aTexCoords;
 
 out vec2 TexCoords;
 out vec3 FragPos;
+out vec3 aFragColor;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -24,11 +25,20 @@ void main()
 
 	// 计算纹理坐标
 	TexCoords = vec2(X * XDet,1.0 - (Y + 1) * YDet) + vec2(aTexCoords.x / colCount,aTexCoords.y / rowCount);
-	//TexCoords = aTexCoords;
+	//TexCoords = aTexCoords.xy;
+	//aFragColor = vec3(aTexCoords[3], 0.0, 0.0);
 
 	vec3 pos = aPos;
 	pos.x += -colCount / 2 + X + 0.5;
 	pos.y += -rowCount / 2 + Y + 0.5;
+
+	if(aTexCoords.z > 0){
+		X = X + 1;
+	}
+
+	if (aTexCoords[3] > 0){
+		Y = Y + 1;
+	}
 
 	// 越靠近旗杆频率越大，波长越短
 	float ZDet = 1.0 / max(XDet, YDet) * X /colCount;

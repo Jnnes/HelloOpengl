@@ -37,10 +37,10 @@ void key_callback(GLFWwindow*, int, int, int, int);
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 GLfloat vertices[] = {
-    -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, // 左上
-    0.5f, 0.5f, 0.0f, 1.0f, 0.0f,// 右上
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,// 左下
-    0.5f, -0.5f, 0.0f, 1.0f, 1.0f // 右下
+    -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,-0.5f, 0.5f, // 左上
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f,0.5f,0.5f,// 右上
+    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, -0.5f,-0.5f, // 左下
+    0.5f, -0.5f, 0.0f, 1.0f, 1.0f,0.5f,-0.5f // 右下
 };
 
 GLuint indices[] = {
@@ -119,10 +119,10 @@ int main() {
     // 从此刻起，我们使用的任何在GL_ARRAY_BUFFER目标上的缓冲调用都会用来配置当前VBO
     // 然后我们可以调用GLBufferData函数，他会把之前定义的顶点数据复制到缓冲的内存中
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GL_FLOAT), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(GL_FLOAT), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
      
