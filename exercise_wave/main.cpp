@@ -163,7 +163,7 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         GLfloat timeValue = (GLfloat)glfwGetTime();
         if (timeValue - lastTime > det) {  
-            system("cls");
+            // system("cls"); // 不执行清屏，防止看不到shader的错误日志
             std::cout << "fps = " << to_string(count / det) << std::endl;
             count = 0;
             lastTime = timeValue;

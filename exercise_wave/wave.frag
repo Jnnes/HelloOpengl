@@ -4,7 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec2 FragPos;
 
-#define MUTIL_CLICK_COUNT 1000
+#define MUTIL_CLICK_COUNT 500 // 某些机器最多只能支持1024个常亮寄存器
 uniform sampler2D ourTexture;
 uniform vec2 click[MUTIL_CLICK_COUNT];
 uniform float clicktime[MUTIL_CLICK_COUNT];
