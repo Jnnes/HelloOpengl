@@ -25,10 +25,14 @@ void main()
 		tempDis = sqrt(dir.x * dir.x +  dir.y * dir.y);
 
 		float speed = 0.3;
+
+		// 当前位置到，距离从点击位置传播一段时间后的距离
 		float disOffset = clamp(((curtime + 1 - clicktime[i])* speed - tempDis) * 6, 0.0,6.283) - 3.1416; // 波传播到的位置与前位置的距离
 		
+		// 当前位置的振幅
 		a = pow((cos(disOffset) + 1) / 2, 2) /80;
 		
+		// 振幅乘以 当前位置的高度（近似高度，通过偏移uv模拟）
 		a *= cos((tempDis - (curtime + 1 - clicktime[i]) * speed) * 30);		
 		
 		uv += a *  normalize(dir);

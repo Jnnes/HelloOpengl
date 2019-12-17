@@ -13,6 +13,8 @@
 #include <iostream>
 #include <custom/log.h>
 
+#include <stdlib.h>
+
 const char windowsTitles[] = "HelloTriangle";
 struct TextureStruct
 {
@@ -160,7 +162,8 @@ int main() {
     int det = 2;
     while (!glfwWindowShouldClose(window)) {
         GLfloat timeValue = (GLfloat)glfwGetTime();
-        if (timeValue - lastTime > det) {            
+        if (timeValue - lastTime > det) {  
+            system("cls");
             std::cout << "fps = " << to_string(count / det) << std::endl;
             count = 0;
             lastTime = timeValue;
@@ -277,7 +280,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
             break;
         }
     }        
-    else
+    else if (action == GLFW_RELEASE)
         switch (button) {
             case GLFW_MOUSE_BUTTON_LEFT:
                 isClickPressed = false;            
