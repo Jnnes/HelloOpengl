@@ -54,6 +54,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18_PointShadows", "18_Point
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exercise_flag", "exercise_flag\exercise_flag.vcxproj", "{3C99A7C9-7470-44DB-BFCB-A26075B6EC07}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exercise_wave", "exercise_wave\exercise_wave.vcxproj", "{D6970E92-6DA4-415C-84F2-B215CE2F4852}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -222,6 +224,14 @@ Global
 		{3C99A7C9-7470-44DB-BFCB-A26075B6EC07}.Release|x64.Build.0 = Release|x64
 		{3C99A7C9-7470-44DB-BFCB-A26075B6EC07}.Release|x86.ActiveCfg = Release|Win32
 		{3C99A7C9-7470-44DB-BFCB-A26075B6EC07}.Release|x86.Build.0 = Release|Win32
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Debug|x64.ActiveCfg = Debug|x64
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Debug|x64.Build.0 = Debug|x64
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Debug|x86.ActiveCfg = Debug|Win32
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Debug|x86.Build.0 = Debug|Win32
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Release|x64.ActiveCfg = Release|x64
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Release|x64.Build.0 = Release|x64
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Release|x86.ActiveCfg = Release|Win32
+		{D6970E92-6DA4-415C-84F2-B215CE2F4852}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
