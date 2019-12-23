@@ -1,4 +1,4 @@
-﻿#OpenGL 学习笔记
+#OpenGL 学习笔记
 
 #OpenGL渲染管线之概述 （一）
 ##前言：
@@ -206,6 +206,7 @@ glBindTexture(GL_TEXTURE_2D, 0);
 &emsp;&emsp;因为OpenGL只是一个标准，只提供接口定义，内部实现由各大硬件厂商完成，并且还可以跨平台，所以我们需要一个库，它能够帮我们找到不同平台上的OpenGL函数到底在硬盘的哪里，glew库实现了这个功能。
 
 &emsp;&emsp;另外我们可以使用glfw库方便我们创建窗口。
+
 
 ```
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
