@@ -1,4 +1,7 @@
-#OpenGL 学习笔记
+﻿#OpenGL 学习笔记
+修改记录：
+1. 2020.01.13 调整错别字
+
 
 #OpenGL渲染管线之概述 （一）
 ##前言：
@@ -10,10 +13,10 @@
 
 ##流水线阶段：
 
-&emsp;&emsp;***模型数据：***该阶段是定义绘制的图形的位置，大小，颜色。例如：我们需要在世界坐标系的原点处画一个平面三角形，那么我们至少需要定义这个三角形的三个顶点分别在什么位置（3D空间）。如果需要，我们还可以定义三个顶点分别是什么颜色。基于这些信息，我们就可以确定这个三角形在什么位置和大小。
-顶点着色器：该阶段是转换模型数据里的3D坐标到裁剪坐标系。因为我们的模型数据的坐标都是局部坐标，可物体要真实地被渲染在屏幕上，还需要经过局部坐标系-世界坐标系-观察坐标系-投影坐标系-屏幕坐标系等过程，当然也可以直接从局部坐标系到屏幕坐标系，只是这样的话，这个空间里的所有物体都需要重复实现 世界坐标系-观察坐标系-投影坐标系-屏幕坐标系这个计算过程，而这个过程在这个空间里的大部分物体都是完全一样的。基于此，我们需要一个顶点着色器来应用不同物体之前的3D变化，最大程度地增加重用减小耦合。
-&emsp;&emsp;***图元装配：***该阶段是将模型的定义具体化。因为上面两个阶段的物体只有最小定义，例如三角形由三个顶点即可确定。但是在屏幕上显示的却是完整的三角形。更加关键的是，我们的屏幕是离散的像素点，从三角形的三个顶点，到屏幕上离散的点的集合组成的三角形（只是我们从屏幕上看起来认为是三角形，因为三角形是连续图形的概念），我们不可避免地需要从三角形的三个顶点推断出三角形的连续图形，再将连续图形离散化，显示在屏幕上。而图元装配阶段就是从三个顶点推断出三角形连续图形的定义的过程。
-几何着色器：该阶段是在上一阶段的基础上，修改上一阶段的图元，用以实现特定功能。
+&emsp;&emsp;***模型数据：***该阶段是定义绘制的图形的位置，大小，颜色等。例如：我们需要在世界坐标系的原点处画一个平面三角形，那么我们至少需要定义这个三角形的三个顶点分别在什么位置（3D空间）。如果需要，我们还可以定义三个顶点分别是什么颜色。基于这些信息，我们就可以确定这个三角形在什么位置和大小。
+&emsp;&emsp;***顶点着色器：***该阶段是转换模型数据里的3D坐标到裁剪坐标系。因为我们的模型数据的坐标都是局部坐标，可物体要真实地被渲染在屏幕上，还需要经过**局部坐标系-世界坐标系-观察坐标系-投影坐标系-屏幕坐标系**等过程，当然也可以直接从局部坐标系到屏幕坐标系，只是这样的话，这个空间里的所有物体都需要重复实现 **世界坐标系-观察坐标系-投影坐标系-屏幕坐标系**这个计算过程，而这个过程在这个空间里的大部分物体都是完全一样的。基于此，我们需要一个顶点着色器来应用不同物体之间的不同的3D变化，最大程度地增加重用减小耦合。
+&emsp;&emsp;***图元装配：***该阶段是将模型的定义具体化。因为上面两个阶段的物体只有最小定义，例如三角形由三个顶点即可确定。但是在屏幕上显示的却是完整的三角形（点与点之间看起来是连续的线段）。更加关键的是，我们的屏幕是离散的像素点，从三角形的三个顶点，到屏幕上离散的点的集合组成的三角形（只是我们从屏幕上看起来认为是三角形，因为三角形是连续图形的概念），我们不可避免地需要从三角形的三个顶点推断出三角形的连续图形，再将连续图形离散化，显示在屏幕上。而图元装配阶段就是从三个顶点推断出三角形连续图形的定义的过程。
+&emsp;&emsp;***几何着色器：***该阶段是在上一阶段的基础上，修改上一阶段的图元，用以实现特定功能。
 &emsp;&emsp;***光栅化：***该阶段将图元映射为最终屏幕上响应的像素，也即离散化过程。
 &emsp;&emsp;***片段着色器：***该阶段计算每一个像素的最终颜色。所有OpenGL高其效果产生于此。通过使用3D场景的光照、阴影、光的颜色等数据来计算最终像素颜色。
 &emsp;&emsp;***测试与混合：***该阶段使用各种测试和Blend；测试用来判断像素是否应该被抛弃，混合用于混合多个像素的颜色。
@@ -21,7 +24,7 @@
 
 [OpenGL渲染管线---概述（一）][1] 详细讲述了OpenGL中各个组成模块在流水线中发挥的作用，及对比固定管线与可编程管线，加固理解。
 
-可编程管线，图片引用自上文。下图中省略了图元装配
+固定管线，图片引用自上文。下图中省略了图元装配
 ![此处输入图片的描述][2]
 
 详细可编程管线图示，引用上文：
@@ -38,13 +41,13 @@
 &emsp;&emsp;局部坐标系 ——（模型矩阵）—— 世界坐标系 ——（观察矩阵）——摄像机坐标系——（投影矩阵）——裁剪坐标系
 &emsp;&emsp;各个矩阵及坐标系概述：
 
-***局部坐标系：***局部坐标系是物体内部的坐标系，他描述的是这个物体内部各个组成部分之间的相互关系，每个物体都会有一个他自己的局部坐标系。例如：一个正方形我们可以使用四个顶点来定义，我们约定，该正方形的局部坐标系的原点在正方向中心，那么正方形的四个顶点分别为[0.5, 0.5]，[-0.5, 0.5]，[-0.5, -0.5]，[0.5, -0.5]（逆时针方向）。如果有第二个相同的但是在不同位置的正方形，那么四个顶点的局部坐标也完全相同。不同的在于世界坐标不同。
+***局部坐标系：***局部坐标系是物体内部的坐标系，他描述的是这个物体内部各个组成部分之间的相互关系，每个物体都会有一个他自己的局部坐标系。例如：一个正方形我们可以使用四个顶点来定义，我们约定，该正方形的局部坐标系的原点在正方向中心，那么正方形的四个顶点分别为[0.5, 0.5]，[-0.5, 0.5]，[-0.5, -0.5]，[0.5, -0.5]（逆时针方向）。如果有第二个相同的但是在不同位置的正方形，那么四个顶点的局部坐标也完全相同。不同的是这连个正方形世界坐标不同。
 
 ***模型矩阵：***将物体的坐标从局部坐标系转换到世界坐标系。上面的两个正方形的四个顶点的局部坐标完全一样，但是模型矩阵不一样，导致在世界坐标系中的位置不一样。如果Cube0在原点，那么Cube0的模型矩阵为E，Cube1的中心在X轴的1.0位置，那么就相当于将Cube0往X轴方向平移1.0距离，那个这个平移变换就是Cube1的模型矩阵，同理旋转缩放。
 
 ***世界坐标系：***描述所有物体的顶点之间的相对位置。
 
-***观察矩阵：***将世界中的物体坐标转换到摄像机坐标系，用以模拟摄像机在世界的不同位置、以不同角度、不同视角观察世界。这里需要注意的是，摄像机坐标系的Z轴正方向对应的是摄像机屁股对应的方向，而不是镜头对应的方向。这样定义的好处是：Opengl屏幕坐标系的Z轴向屏幕外，当摄像器的Z轴和屏幕坐标系的Z轴方向也一样时便于计算，否则的话，转换过程都需要加上Z轴翻转，但是摄像机又需要向着屏幕内的物体，这样就导致了摄像机镜头向着屏幕里（Z轴负方向），摄像机屁股向着屏幕外（Z轴正方向）。
+***观察矩阵：***将世界中的物体坐标转换到摄像机坐标系，用以模拟摄像机在世界的不同位置、以不同角度、不同视角观察世界。这里需要注意的是，摄像机坐标系的Z轴正方向对应的是摄像机屁股对应的方向，而不是镜头对应的方向。这样定义的好处是：Opengl屏幕坐标系的Z轴向屏幕外，当摄像器的Z轴和屏幕坐标系的Z轴方向一样时便于计算，否则的话，转换过程都需要加上Z轴翻转，但是摄像机又需要向着屏幕内的物体，这样就导致了摄像机镜头向着屏幕里（Z轴负方向），摄像机屁股向着屏幕外（Z轴正方向）。
 
 ***摄像机坐标系：***以摄像机为原点，描述世界中所有物体的相对位置。
 
@@ -61,11 +64,11 @@
 #OpenGL渲染管线之纹理（三）
 ##概述：
 
-&emsp;&emsp;纹理时一个2D图片（也可以是1D或者3D），用来让图形看起来更真实。是一种很简单就能够模拟真实的方法，因为如果不使用纹理，那么我们就必须为所有细节构建顶点和图形，这样的开销会非常大，有了纹理后，我们就只需要少很多的顶点，然后把纹理贴上去就可以了，及时有些不真实，但是也看不出来。
+&emsp;&emsp;纹理是一个2D图片（也可以是1D或者3D），用来让图形看起来更真实。是一种很简单就能够模拟真实的方法，因为如果不使用纹理，那么我们就必须为所有细节构建顶点和图形，这样的开销会非常大，有了纹理后，我们就只需要少很多的顶点，然后把纹理贴上去就可以了，即使有些不真实，但是很难看出来。
 
 ##纹理坐标：
 
-&emsp;&emsp;纹理坐标的原点在左下角；S、T、R 对应 X、Y、Z但是在存储图片的时候数据是从左上角开始存，这样导致读取的坐标Y轴被反转。OpenGL默认开启4字节对齐，如果在读取的数据不是4字节对齐的，在将图片数据转换到纹理对象后再使用会导致图像倾斜，因为数据使用一维数组存储，同时使用width和height查询像素的具体位置。可以使用glPixelStorei(GL_UNPACK_ALIGNMENT, 1)设置字节对齐方式。
+&emsp;&emsp;纹理坐标的原点在左下角；S、T、R 对应 X、Y、Z但是在存储图片的时候数据是从左上角开始存，这样导致读取的坐标Y轴被反转。OpenGL默认开启4字节对齐，如果读取的数据不是4字节对齐的，将图片数据转换到纹理对象会导致图像倾斜，因为数据使用一维数组存储，同时使用width和height查询像素的具体位置。可以使用glPixelStorei(GL_UNPACK_ALIGNMENT, 1)设置字节对齐方式。
 
 ##纹理环绕方式：
 - GL_REPEAT：纹理的默认行为，重复纹理图形
@@ -80,7 +83,7 @@ eg： glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);//�
 
 - GL_NEAREST：最近邻过滤，看起来锐利，使用靠近目标坐标的的纹理坐标处的颜色。建议用在当Minify（缩小）的情况下。
 - GL_LINEAR：线性过滤，看起来模糊，使用目标坐标附近的纹理颜色线性插值。建议用在Magnify（放大）的情况下。
-为了进一步让纹理再使用时看起来更真实，使用了多级渐远纹理（Mipmap）。Mipmap是一套纹理，他们从第0个纹理（原始纹理）开始，后面一个纹理的边长都为前一个的二分之一，用以模拟纹理在所有缩放尺寸的纹理。由于使用二分之一作为倍数，所以还是会出现不真实的边届，所以也可以对Mipmap使用多种纹理过滤方式，例如：
+为了进一步让纹理再使用时看起来更真实，使用了多级渐远纹理（Mipmap）。Mipmap是一套纹理，他们从第0个纹理（原始纹理）开始，后面一个纹理的边长都为前一个的二分之一，用以模拟纹理在所有缩放尺寸的纹理。由于使用二分之一作为倍数，所以还是会出现不真实的边界，所以也可以对Mipmap使用多种纹理过滤方式，例如：
 1. GL_NEAREST_MIPMAP_NEAREST：使用最邻近的多级渐远纹理来匹配像素大小，并使用邻近插值进行纹理采样
 2. GL_LINEAR_MIPMAP_NEAREST：使用最邻近的多级渐远纹理级别，并使用线性插值进行采样
 3. GL_NEAREST_MIPMAP_LINEAR：在两个最匹配像素大小的多级渐远纹理之间进行线性插值，使用邻近插值进行采样
@@ -89,13 +92,13 @@ eg： glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);//�
 
 
 #OpenGL渲染管线之着色器（四）
-本文所介绍的着色器将基于OpenGL 3.3
+本文所介绍的着色器基于OpenGL 3.3
 
 ##前言：
-&emsp;&emsp;OpenGL实现可编程逻辑管线，开发人员就可以自定义其中的某些流程，从 《penGL渲染管线之概述 （一）》（点击进入）可以看出，可编程逻辑管线的实现方式只是将之前的固定管线中可编程的部分提取出来供开发人员自定义。目前，开发人员可以使用的包括顶点着色器、几何着色器、片元着色器。它们的功能请继续阅读《penGL渲染管线之概述 （一）》。
+&emsp;&emsp;OpenGL实现可编程逻辑管线，开发人员就可以自定义其中的某些流程，从 《penGL渲染管线之概述 （一）》（[点击进入][7]）可以看出，可编程逻辑管线的实现方式只是将之前的固定管线中可编程的部分提取出来供开发人员自定义。目前，开发人员可以使用的包括顶点着色器、几何着色器、片元着色器。它们的功能请继续阅读《penGL渲染管线之概述 （一）》。
 
 ##概述：
-&emsp;&emsp;着色器是OpenGL可编程逻辑管线中的某些流程，目前可供开发人员自定的包括顶底、几何、片元着色器。他们都使用GLSL（OpenGL Shader Language），因为它们对向量和矩阵有特别的支持，所以很适合用于图形计算。
+&emsp;&emsp;着色器是OpenGL可编程逻辑管线中的某些流程，目前可供开发人员自定的包括顶底、几何、片元着色器。使用GLSL（OpenGL Shader Language）编程，因为它对向量和矩阵有特别的支持，所以很适合用于图形计算。
 
 ##语法：
 
@@ -148,8 +151,8 @@ glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 引用网址：https://learnopengl-cn.readthedocs.io/zh/latest/ 如遇到问题，请上该网址查找。
 
-&emsp;&emsp;OpenGL编程前须知：在开始OpenGL编程之前，我们需要提前了解一些东西，包括以下几方面
-OpenGL是一个大的状态机，我们可以把渲染的每个阶段都看成一个状态，而在每个状态的动作由各种属性控制，当前状态的动作执行完后会自动进入下一个状态，直到完成渲染，我们需要使用属性设置函数来设置属性，通过属性应用函数来应用属性。
+&emsp;&emsp;OpenGL编程前需知：在开始OpenGL编程之前，我们需要提前了解一些东西，包括以下几方面
+OpenGL是一个大的状态机，我们可以把渲染的每个阶段都看成一个状态，而每个状态的动作由各种属性控制，当前状态的动作执行完后会自动进入下一个状态，直到完成渲染，我们需要使用属性设置函数来设置属性，通过属性应用函数来应用属性。
 &emsp;&emsp;在状态机中，我们把很多东西都当做对象来管理，这样当状态机中有多个相同类型的对象时，我们可以通过绑定某种类型对象和他实际存储数据发挥作用的对象，那么当状态机需要使用该类型时，则会自动去使用绑定该类型的对象。例如：纹理对象，缓冲对象等。所有的对象都继承自Object，对于这种使用对象来管理的数据，我们在使用之前都需要创建一个对象，然后将该类型对象绑定到新创建的这个对象实例上。
 
 ```
@@ -175,9 +178,11 @@ glSetObjectOption(GL_WINDOW_TARGET, GL_OPTION_WINDOW_HEIGHT, 600);
 // 将上下文的GL_WINDOW_TARGET对象设回默认，解除GL_WINDOW_TARGET 与objectId的绑定
 // 后面对GL_WINDOW_TARGET的操作将不会操作objectId
 glBindObject(GL_WINDOW_TARGET, 0);
+```
 
 但是，有些特殊对象并不是使用上面的函数，例如纹理：
 
+```
 // 创建一个纹理对象，并保存其唯一对象id，OpenGL内所有的对象Id均不相同，不论什么类型。
 GLuint texture;
 glGenTextures(1, &texture);
@@ -201,12 +206,11 @@ glBindTexture(GL_TEXTURE_2D, 0);
 
 ###1. 创建窗口
 
-&emsp;&emsp;创建窗口的详细过程可以参照LearnOpengl入门的创建窗口（点击进入），或者使用文章开头提供的项目。下面只对代码进行解释。
+&emsp;&emsp;创建窗口的详细过程可以参照LearnOpengl入门的创建窗口（[点击进入][8]），或者使用文章开头提供的项目。下面只对代码进行解释。
 
 &emsp;&emsp;因为OpenGL只是一个标准，只提供接口定义，内部实现由各大硬件厂商完成，并且还可以跨平台，所以我们需要一个库，它能够帮我们找到不同平台上的OpenGL函数到底在硬盘的哪里，glew库实现了这个功能。
 
 &emsp;&emsp;另外我们可以使用glfw库方便我们创建窗口。
-
 
 ```
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -316,8 +320,8 @@ GLfloat vertices[] = { // 深度都为0，表现为在XY坐标系下的三个点
 };
 ```
 
-&emsp;&emsp;我们需要使用VBO（顶点缓冲对象）来存储顶点数据，我们还可以使用VAO（顶点数组对象）来绑定，这样当我们切换不同的VBO时只需要切换绑定不同的VAO就可以了，更好的优点是，我们不仅可以吧VBO绑定在VAO上，我们还可以把VEO（顶点索引数组）也绑定在VAO上，这样我们只要切换了VAO就同时切换了VBO和VEO。
-![此处输入图片的描述][7]
+&emsp;&emsp;我们需要使用VBO（顶点缓冲对象）来存储顶点数据，我们还可以使用VAO（顶点数组对象）来绑定，这样当我们切换不同的VBO时只需要切换绑定不同的VAO就可以了，更大的优点是，我们不仅可以把VBO绑定在VAO上，我们还可以把EBO（顶点索引数组）也绑定在VAO上，这样我们只要切换了VAO就同时切换了VBO和EBO。
+![此处输入图片的描述][9]
 
 VAO、VBO、EBO之间的关系
 我们可以像创建其他对象一样创建VAO，VBO，EBO
@@ -349,8 +353,8 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), indices1, GL_STATIC_DRAW
 // 创建、绑定 顶点缓冲对象，并设置数据
 GLuint VBO1;
 glGenBuffers(1, &VBO1);
-glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 // 从此刻起，我们使用的任何在GL_ARRAY_BUFFER目标上的缓冲调用都会用来配置当前VBO
+glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 // 然后我们可以调用GLBufferData函数，他会把之前定义的顶点数据复制到缓冲的内存中
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)0);
@@ -379,13 +383,13 @@ glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 glDrawArrays(GL_TRIANGLES, 0, 3);     
 ```
 
-&emsp;&emsp;在glBindVertexArray(VAO1)和glBindVertexArray(0)之间的所有对VBO和EBO的操作都会被VAO记录下来，那么当我们再次调用glBindVertexArray(VAO1)时，OpenGL就知道我们需要使用在VAO1中设置好的VBO和VEO。
+&emsp;&emsp;在glBindVertexArray(VAO1)和glBindVertexArray(0)之间的所有对VBO和EBO的操作都会被VAO记录下来，那么当我们再次调用glBindVertexArray(VAO1)时，OpenGL就知道我们需要使用在VAO1中设置好的VBO和EBO。
 
 &emsp;&emsp;在使用glVertexAttribPointer() 时，我们要注意里面的参数，主要是位置偏移。具体的请查看相关手册。
 
 ###3.着色器
 
-&emsp;&emsp;要使用着色器，我们必须创建我们自己的着色器对象，然后我们将着色器源码放放入着色器对象，编译它们；我们还需要运行着色器的着色器程序对象，并且将着色器对象放入着色器程序对象中，并链接对个着色器对象，当我们使用某个着色器程序对象时，OpenGL就会自动对 待绘制的图形使用之前放入的着色器对象，它将按照我们再着色器源码中写的那样渲染出图形。
+&emsp;&emsp;要使用着色器，我们必须创建我们自己的着色器对象，然后我们将着色器源码放放入着色器对象，编译它们；我们还需要运行着色器的着色器程序对象，并且将着色器对象放入着色器程序对象中，并链接这个着色器对象，当我们使用某个着色器程序对象时，OpenGL就会自动对待绘制的图形使用之前绑定的着色器对象，它将按照我们再着色器源码中写的那样渲染出图形。
 ```
 //  声明一个GLuint 来存储顶点着色器对象的ID
 GLuint vertexShader;
@@ -426,8 +430,9 @@ glLinkProgram(shaderProgram);
 
 // 使用着色器，任何时候，只要我们需要，我们就可以调用这段代码
 glUseProgram(shaderProgram);
- 上面的代码只列出了顶点着色器，片元着色器的创建方法类似。下面的代码是顶点着色器和偏远着色器的源码。
 ```
+ 上面的代码只列出了顶点着色器，片元着色器的创建方法类似。下面的代码是顶点着色器和片元着色器的源码。
+
 ```
 // shader1.vert 顶点着色器
 #version 330 core
@@ -459,7 +464,7 @@ in vec2 TexCoord;
 
 out vec4 fragColor;
 
-// GL_TEXTURE0 的纹理采样器ID，只要指定了GL_TEXTURE0，OpenGL会自己生成这个变量
+// GL_TEXTURE0 的纹理采样器ID，在代码中指定这个uniform为(INT)0即可
 uniform sampler2D ourTexture1;
 uniform sampler2D ourTexture2;// GL_TEXTURE1 的纹理采样器ID，同上
 
@@ -498,7 +503,7 @@ void main()
 ```
 ###4. 使用纹理
 
-&emsp;&emsp;纹理的使用我们需要使用某些库来辅助我们读取图片数据，毕竟谁也不想与种类繁多的图片格式打交道。我们可以使用SOIL库或者stb_image等，但他们的作用都只是帮助你更方便使用图片。这里使用的是SOIL。
+&emsp;&emsp;使用纹理我们需要使用某些库来辅助我们读取图片数据，毕竟谁也不想与种类繁多的图片格式打交道。我们可以使用SOIL库或者stb_image等，但他们的作用都只是帮助你更方便使用图片。这里使用的是SOIL。
 
 &emsp;&emsp;很多时候我们需要先禁用4字节对齐，改为1字节对齐，因为OpenGL默认使用4字节对齐，而很多图片他们并没有完整的4通道或者其他原因导致他的数据不是4的整数倍，如果这时OpenGL按照4的倍数来计算图片的尺寸的话往往会存在些偏差，这些偏差表现在显示上就是图片会倾斜。
 
@@ -549,7 +554,6 @@ glBindTexture(GL_TEXTURE_2D, 0);//解绑
 // 转换纹理的操作完成后再开启4字节对齐,也可以在读取。设置纹理数据结束后就执行该操作
 glPixelStorei(GL_UNPACK_ALIGNMENT, 4); 
 
-
 /* 我们可以在主循环中这样使用 */
 
 // 启用着色器程序
@@ -568,7 +572,7 @@ glUniform1i(glGetUniformLocation(shader1.Program, "ourTexture2"), 1);
 ```
 ###5. 坐标系变换及摄像机移动
 
-&emsp;&emsp;之前的[OpenGL渲染管线之坐标系（二）][8]已经叙述过OpenGL之间的坐标系，上一节的顶点着色器中已经置入了模型矩阵、观察矩阵、投影矩阵。下面我只会记录一些学习过程中的额外内容。
+&emsp;&emsp;之前的[OpenGL渲染管线之坐标系（二）][10]已经叙述过OpenGL之间的坐标系，上一节的顶点着色器中已经置入了模型矩阵、观察矩阵、投影矩阵。下面我只会记录一些学习过程中的额外内容。
 ```
 // 创建模型矩阵，这里只是将所有模型统一往屏幕内部旋转了timeValue * 5度
 glm::mat4 modeltemp;
@@ -629,7 +633,7 @@ struct Light {
 };
 uniform Light light;
 ```
-![此处输入图片的描述][9]
+![此处输入图片的描述][11]
 
 三个组成部分的计算方法：
 ```
@@ -652,12 +656,12 @@ vec3 specular = Light.specular * spec * Material.specular;
 vec3 resultColor = ambient + diffuse + specular;
 ```
 ##光照贴图
-&emsp;&emsp;我们可以使用贴图来更加近似地模拟真实环境，同样为了更加容易区分出物体表面的漫反射以及镜面反射，我们可以使用漫反射贴图和镜面反射贴图来控制反射的颜色，同样对于某些自发光的物体，我么你还可以使用mission纹理来模拟自发光。 
-![此处输入图片的描述][10]
+&emsp;&emsp;我们可以使用贴图来更加近似地模拟真实环境，同样为了更加容易区分出物体表面的漫反射以及镜面反射，我们可以使用漫反射贴图和镜面反射贴图来控制反射的颜色；同样对于某些自发光的物体，你还可以使用mission纹理来模拟自发光。 
+![此处输入图片的描述][12]
 
 
 上面是一张漫反射纹理，我们再获取对应坐标的位置后，使用纹理颜色替换材质颜色进行漫反射计算即可。
-![此处输入图片的描述][11]
+![此处输入图片的描述][13]
 
 
 与漫反射贴图类似，我们可以将镜面反射纹理颜色乘到原来的镜面反射颜色部分。
@@ -665,11 +669,11 @@ vec3 resultColor = ambient + diffuse + specular;
 ##投光物
 顾名思义就是将光线投出去的东西，也即光源。
 
-1. 生活中所有的光源都是点光源，太阳就是无数的点光源组成的，因为距离很远，我们可以把太阳看成一个点光源。假设光源上两个点距离Dis，光源到物体距离R,那么这个两个点光源到该物体的夹角为Dis/R，由于R很大，所以夹角近似为0，可以认为从两个光源来的光线重合，也即可以认为是一个点光源。可以得出结论，当距离足够远时，可以把多个点光源看成一个点光源。
-同样，当半径非常大时，圆上两个距离很近的点，这两个点之间的角度差（Dis/R）近似为0，也即圆心到这两点的直线夹角为0，也即不相交（以上都是近似）。可以得出结论，当距离足够远时，可以把点光源看成平行光源。
-2. 考虑到真实环境中的光线衰减（散射、折射、频率降低等等），我们可以使用线性函数近似莫斯这个过程，通过指定多项式的因子，来控制衰减速度变化，通常我们使用二次就足够了，公式：，D是到光源的距离，通过指定不同的a、b值，我们就可以模拟不用的衰减变化曲线。
-经过遮挡物，遮挡物后的光线会被阻挡，我们使用聚光来模拟这种情况（类似手电筒），也即一个点光源加上限制的光源散射角度范围。一般情况下可投影的范围是个圆形，这时只需要比较片元到光源的方向是否在限制角度内即可，但是也存起可投影范围不是圆形的情况，例如方形，那么这个时候，可以控制模板测试？
-3. 但是真实情况手电筒并不是点光源，当距离比较近时，半影区会比较明显，这时可以使用近似方法模拟这种半影，例如半影区一次线性变化（角度or余弦值？）等等。
+1. 生活中所有的光源都是点光源，太阳就是无数的点光源组成的，因为距离很远，我们可以把太阳看成一个点光源。假设光源上两个点距离Dis，光源到物体距离R,那么这个两个点光源到该物体的夹角为Dis/R，由于R很大，所以夹角近似为0，可以认为从两个光源来的光线重合，也即可以认为是一个点光源。可以得出结论，当距离足够远时，可以把多个点光源看成一个**点光源**。
+同样，当半径非常大时，圆上两个距离很近的点，这两个点之间的角度差（Dis/R）近似为0，也即圆心到这两点的直线夹角为0，也即不相交（以上都是近似）。可以得出结论，当距离足够远时，可以把点光源看成**平行光源**。
+2. 考虑到真实环境中的光线衰减（散射、折射、频率降低等等），我们可以使用线性函数近似模拟这个过程，通过指定多项式的因子，来控制衰减速度变化曲线，通常我们使用二次就足够了，公式：1.0 / (1.0 + a * D + b * D^2)，D是到光源的距离，通过指定不同的a、b值，我们就可以模拟不用的衰减变化曲线。
+3. 经过遮挡物，遮挡物后的光线会被阻挡，我们使用**聚光**来模拟这种情况（类似手电筒），也即一个点光源加上限制的光源散射角度范围。一般情况下可投影的范围是个圆形，这时只需要比较片元到光源的方向是否在限制角度内即可，但是也存起可投影范围不是圆形的情况，例如方形，那么这个时候，可以控制模板测试？
+4. 但是真实情况手电筒并不是点光源，当距离比较近时，半影区会比较明显，这时可以使用近似方法模拟这种半影，例如半影区一次线性变化（角度or余弦值？）等等。
 
 ##多光源
 灵活利用之前提到的光源即可。
@@ -705,11 +709,11 @@ vec3 resultColor = ambient + diffuse + specular;
 
 ###深度值精度
 &emsp;&emsp;深度缓冲包含了一个介于0.0和1.0之间的深度值，它将会与观察者视角所看见的场景中所有物体的z值进行比较。观察空间的z值可能是投影平截头体的近平面(Near)和远平面(Far)之间的任何值。我们需要一种方式来将这些观察空间的z值变换到[0,1]范围之间，其中的一种方式就是将它们线性变换到[0, 1]范围之间。
-![此处输入图片的描述][12]
+![此处输入图片的描述][15]
 
 &emsp;&emsp;在实践中是几乎永远不会使用这样的线性深度缓冲(Linear Depth Buffer)的。要想有正确的投影性质，需要使用一个非线性的深度方程，它是与 1/z 成正比的。它做的就是在z值很小的时候提供非常高的精度，而在z值很远的时候提供更少的精度。
-![此处输入图片的描述][13]
-![此处输入图片的描述][14]
+![此处输入图片的描述][16]
+![此处输入图片的描述][17]
 
 
 &emsp;&emsp;可以看到，深度值很大一部分是由很小的z值所决定的，这给了近处的物体很大的深度精度。这个（从观察者的视角）变换z值的方程是嵌入在投影矩阵中的，所以当我们想将一个顶点坐标从观察空间至裁剪空间的时候这个非线性方程就被应用了。
@@ -804,14 +808,14 @@ glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, text
 8. 因为东西只绘制在新建的纹理缓冲中，所以记得切换回默认帧缓冲，并将纹理绘制到默认缓冲上，glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 ##后期处理
-在上面的第6步后，我们就得到了屏幕截图纹理，有了这个纹理，我们可以做很多单纯使用shader无法完成的事情。因为shader中我们只关注单个顶点或但个片元（像素）的位置与颜色，我们并不关心他与周围顶点或片元之前的关系。基于此，我们可以完成例如灰度、模糊、锐化、边缘检测等很多操作。当然，灰度也可以在shader里完成，不同的是，我们可以单独写一个灰度的shader，来对整个屏幕的场景进行灰度，而避免了在所有需要灰度的物体的shader里加上灰度的代码。
+在上面的第6步后，我们就得到了屏幕截图纹理，有了这个纹理，我们可以做很多单纯使用shader无法完成的事情。因为shader中我们只关注单个顶点或单个片元（像素）的位置与颜色，我们并不关心他与周围顶点或片元之间的关系。基于这个屏幕截图纹理，我们可以完成例如灰度、模糊、锐化、边缘检测等很多操作。当然，灰度也可以在shader里完成，不同的是，我们可以单独写一个灰度的shader，来对整个屏幕的场景进行灰度，而避免了在所有需要灰度的物体的shader里加上灰度的代码。
 
 ##核效果
 &emsp;&emsp;我们这里暂时只关注像素与紧邻的像素的关系，我们将其的乘因子的矩阵单独列出来，称作核，它有下面的这种形式。
-![此处输入图片的描述][15]
+![此处输入图片的描述][18]
 
 
-&emsp;&emsp;但是需要注意的是，我们保证所有因子的和为1，否则可能造成变亮和变暗，这个和我们的提高亮度shader和减小亮度shader是类似的。
+&emsp;&emsp;但是需要注意的是，我们保证所有因子的和为1，否则可能造成变亮或变暗，这个和我们的提高亮度shader和减小亮度shader是类似的。
 ```
 const float offset = 1.0 / 300.0;  
 
@@ -850,10 +854,10 @@ void main()
 }
 ```
 
-&emsp;&emsp;我们只是单纯地把核用来存储乘因子，然后将每个元素乘以乘因子累加得到最终的结果。我们当然可以使用其他更复杂的算法，只不过，上面这种简单的算法已经能够充分表现各种效果了，而我们只需要调整核中的各个因子的比例即可。
+&emsp;&emsp;我们只是单纯地把核用来存储乘因子，然后将每个元素乘以乘因子累加得到最终的结果。我们当然可以使用其他更复杂的算法，只不过，上面这种简单的算法已经能够充分表现各种效果了，而我们只需要调整核中的各个因子的比例即可。最重要的原因是这样更简单性能更好。
 
-&emsp;&emsp;上面的例子是锐化，从核中个因子的比例，我们可以看出，使用该的目的是为了加大目标像素与周围像素的不同，而我们称呼这个不同为锐化。同理，如果要制作模糊的核，因为模糊的本质是目标像素和周围的像素差别变小，那么我们可以写出下面的核。
-![此处输入图片的描述][16]
+&emsp;&emsp;上面的例子是锐化，从核因子的比例，我们可以看出，使用该核因子的目的是为了放大目标像素与周围像素的不同，而我们称呼这个不同造成的现象为锐化。同理，如果要制作模糊的核，因为模糊的本质是目标像素和周围的像素差别变小，那么我们可以写出下面的核。
+![此处输入图片的描述][19]
 
 
 &emsp;&emsp;上面的模糊核没有负数，也即只是单纯求平均。我们可以改变中间因子与周围因子的比例，来控制模糊的系数，当中间为1，周围均为0时，也就是不模糊了。
@@ -891,7 +895,7 @@ void main()
 
 2. 在绘制立方体贴图时，八个顶点的位置也就是它在摄像机坐标系的的方向。
 
-3. 因为天空盒是一直以摄像机为原点，所以不需要模型矩阵。
+3. 因为天空盒一直以摄像机为原点，所以不需要模型矩阵。
 
 4. 需要注意的一点是，我们假设天空盒是无限大的，所以摄像机的运动对天空盒的场景不应该有位移变化，所以，传入的摄像机矩阵不应该包含摄像机的位移。
 ```
@@ -925,7 +929,7 @@ void main()
 ##优化
 &emsp;&emsp;天空盒非常大，每个绘制循环都把天空盒所有面都画到难免浪费性能，所以我们可以使用提前深度测试丢弃不需要绘制的天空盒。如果我们先绘制天空盒再绘制物体，就会绘制天空盒的所有片元。
 
-&emsp;&emsp;提前深度测试是指在片元着色器之前执行的深度测试，一般我们说的深度测试是指在片 元着色器—模板测试—深度测试-Blend 中的深度测试。也就是说，只要我们先绘制了其他物体，接下来绘制天空盒的时候就会自动使用提前深度测试。
+&emsp;&emsp;提前深度测试是指在片元着色器之前执行的深度测试，一般我们说的深度测试是指在片元着色器—模板测试—深度测试-Blend 中的深度测试。也就是说，只要我们先绘制了其他物体，接下来绘制天空盒的时候就会自动使用提前深度测试。
 
 &emsp;&emsp;由于天空盒无限大，也即无限远，所以我们需要将天空盒像素的点的Z值置为1.0表示无限远，gl_Position = pos.xyww;（w等于1.0）.
 
@@ -967,7 +971,7 @@ glUnmapBuffer(GL_ARRAY_BUFFER);
 ```
 
 ###分批顶点属性
-&emsp;&emsp;我们之前是将顶点坐标、颜色、纹理坐标看成一个顶点数据，所有顶点数据依次排列得到所有数据。这样相邻顶点间的相同类型数据的间隔是相同的。我们还可以使用另外一种方式设置数据，将所有的顶点坐标放在一起，所有的颜色放在一起，也即将所有相同类型的数据放在一起。这时我们就需要用到glBufferSubData的偏移了，同理在定义顶点属性时，stride和最后一个偏移参数也会有所不同。
+&emsp;&emsp;我们之前是将顶点坐标、颜色、纹理坐标看成一个顶点数据，所有顶点数据依次排列得到所有数据。这样相邻顶点间的相同类型数据的间隔是相同的。我们还可以使用另外一种方式设置数据，将所有的顶点坐标放在一起，所有的颜色放在一起，也即将所有相同类型的数据放在一起。这时我们就需要用到glBufferSubData的偏移参数了，同理在定义顶点属性时，stride和最后一个偏移参数也会有所不同。
 ```
 float positions[] = { ... };
 float normals[] = { ... };
@@ -1130,7 +1134,7 @@ glBindBuffer(GL_UNIFORM_BUFFER, 0);
 ```
 
 &emsp;&emsp;到这里，我们还是不能将缓冲对象与shader里的uniform块绑定起来，所以下面需要使用OpenGL的绑定点（Binding Point），我们可以把它理解成一个纽带，一头绑Shade的Uniform块，一头绑Uniform缓冲对象，他们是多对多的关系。
-![此处输入图片的描述][17]
+![此处输入图片的描述][20]
 
 
 &emsp;&emsp;ShaderA 和ShaderB的Matrices，他们都需要uboMatrices的数据。下面的例程定义的是将ShadeA的Lights Uniform块绑定到绑定点，然后将uboLights Unform缓冲对象绑定到绑定点，这样就实现了shader和UBO的数据互通。使用glBindBufferRange接口还可以实现只绑定Ubo的部分数据，这样一个ubo里就可以包含多个Uniform块的数据，需要用时分别取用即可。
@@ -1144,7 +1148,7 @@ glBindBufferBase(GL_UNIFORM_BUFFER, 2, uboExampleBlock);
 glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 0, 152);
 ```
 
-从OpenGL4.2开始，我们还可以使用下面的方式手动指定绑定点，这样就不需要再代码里绑定了。
+从OpenGL4.2开始，我们还可以使用下面的方式手动指定绑定点，这样就不需要在代码里绑定了。
 
     layout(std140, binding = 2) uniform Lights { ... };
 &emsp;&emsp;别忘了，我们还可以往UBO中添加数据，只要你想，你可以在任何时候使用glBufferSubData往缓冲里添加数据，但是别忘了加偏移。注意，使用int来存需要放入shader的bool数据，例如：int b = true;
@@ -1153,7 +1157,7 @@ glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboExampleBlock, 0, 152);
 
 #高级OpenGL渲染管线之几何着色器（六）
 &emsp;&emsp;几何着色器在顶点着色器和片元着色器中间。从下面的OpenGL渲染流程图可以看出，渲染的流程为顶点着色器—图元装配—视口剔除—光栅化—片元着色器。而几何着色器在光栅化阶段，但是在光栅化之前执行。
-![此处输入图片的描述][18]
+![此处输入图片的描述][21]
 
 
 &emsp;&emsp;几何着色器的输入是一个图元的所有顶点，输出是图元类型和所有顶点。
@@ -1188,7 +1192,7 @@ void main() {
 - line_strip
 - triangle_strip
 
-&emsp;&emsp;同时我们还需要在输出中使用max_vertices来修饰片元的最大顶点数。有了定点数局我们就可以使用EmitVertex函数和EndPrimitive函数来绘制我们的图元，EmitVertex函数是绘制一个顶点，EndPrimitive函数表示停止之前的绘制并合成图元。上面的例子中，连续线段的最大顶点数是2，所以绘制两个点就够了。
+&emsp;&emsp;同时我们还需要在输出中使用max_vertices来修饰片元的最大顶点数。有了顶点数我们就可以使用EmitVertex函数和EndPrimitive函数来绘制我们的图元，EmitVertex函数是绘制一个顶点，EndPrimitive函数表示停止之前的绘制并合成图元。上面的例子中，连续线段的最大顶点数是2，所以绘制两个点就够了。
 
 &emsp;&emsp;有了上面的功能，我们就可以任意修改图元的顶点，甚至修改图元的类型。我们可以输入一个顶点，输出连续三角形，那么，最后的结果是，之前定义的顶点出就会绘制出我们修改后的连续三角形。
 
@@ -1220,7 +1224,7 @@ void main() {
 &emsp;&emsp;上面的例子展示的是将输入的顶点转化为一个小房子状的连续三角形（triangle_strip），小房子一共3个三角形，那么最大定点数是3 + 2。我们以输入的顶点坐标为初始位置，以不同的位置偏移发射小房子的5个顶点，最后组成图元就有结果了。
 
 &emsp;&emsp;有一点需要注意的是，几何着色器的输入图元类型是由我们在渲染循环里调用glDrawArray和glDrawElement是设置的绘制模式对应的，也即如果要让上面那个几何着色器生效，就需要在绘制时使用GL_POINTS。
-![此处输入图片的描述][19]
+![此处输入图片的描述][22]
 
 
  还有一点需要注意，顶点着色器与几何着色器间的数据传输，我们需注意它的使用方式，以接口块为例。
@@ -1259,12 +1263,12 @@ EndPrimitive();
 
 ##爆破物体
 &emsp;&emsp;使用几何着色器，将顶点沿着法线方向运动一段距离。我们主动传入法向量，或者自己计算法向量，已知三角形的三个顶点计算法向量是很简单的，只是需要注意规范化。
-![此处输入图片的描述][20]
+![此处输入图片的描述][23]
 
 
 ##法向量可视化
 &emsp;&emsp;顾名思义就是看得见法向量，思想是，先绘制一遍原物体，然后再绘制出法线，绘制法线时是用原物体的顶点数据，增加几何着色器，在几何着色器里把法线画出来即可。
-![此处输入图片的描述][21]
+![此处输入图片的描述][24]
 
 ```
 #version 330 core
@@ -1299,7 +1303,7 @@ void main()
 #高级OpenGL渲染管线之实例化与抗锯齿（七）
 
 ##实例化
-&emsp;&emsp;当场景中有大量相似（形状一样，只是角度、位置、缩放不一样）的物体时，如果继续使用glDrawArray或glDrawElement来绘制每一个物体时，大量的性能将会被浪费在和设置OpenGL上下文和与GPU通讯上，因为大量的物体可以使用相同的顶点和模型矩阵，所以我们没必要每一次绘制都设置OpenGL上下文和GPU通讯，，我们只需要一次将生成不同物体间不同属性的必要数据导入，然后绘制所有相同的物体即可。
+&emsp;&emsp;当场景中有大量相似（形状一样，只是角度、位置、缩放不一样）的物体时，如果继续使用glDrawArray或glDrawElement来绘制每一个物体时，大量的性能将会被浪费在和设置OpenGL上下文和与GPU通讯上，因为大量的物体可以使用相同的顶点和模型矩阵，所以我们没必要每一次绘制都设置OpenGL上下文和GPU通讯，我们只需要一次将生成不同物体间不同属性的必要数据导入，然后绘制所有相同的物体即可。
 
 &emsp;&emsp;基于glDrawArrayInstance或glDrawElementInstance，我们可以使用一份顶点数据在一个draw周期内绘制多个物体。GLSL的内建变量gl_instance表示当前正在绘制第几个实例。
 
@@ -1340,14 +1344,14 @@ glVertexAttribDivisor(2, 1);
 
 ##抗锯齿
 &emsp;&emsp;锯齿的表现是线段在视觉上不连续（如下图），我们称这种现象为走样（Aliasing），他的根本原因是存储线段中点的坐标位置的分辨率不够。那么如何减弱这种现象呢？虚化！线段占用在某个像素的控件越多，那么像素颜色就越接近线段的颜色。
-![此处输入图片的描述][22]
+![此处输入图片的描述][25]
 
 
 &emsp;&emsp;在抗锯齿方面，我们有很多方案，比如SSAA（超采样， Super Sample Anti-aliasing），也即使用比正常分辨率更高的分辨率。显而易见，这里会产生非常大的性能消耗。另外还有MSAA（Multisampling），增加像素的采样点，颜色变化更接近线段占像素的面积。如下如所以，普通情况下的像素采样点只有一个，那么，当倾斜角度比较大时，很可能线段占多个像素的面积都不够1/2或者多于1/2，那么表现是连续几个像素都点亮或者熄灭，那么就产生了锯齿，增加采样点时可以减弱这种影响。
-![此处输入图片的描述][23]
+![此处输入图片的描述][26]
 
 
-&emsp;&emsp;注意，虽然有4个采样点，但是片段着色器只执行一次。因为只要覆盖了一个采样点，我们就需要使用片段着色器算出该片段被完整覆盖的颜色，然后按照采样点被覆盖的比例减小颜色即可。
+&emsp;&emsp;注意，虽然有4个采样点，但是片段着色器最多执行一次。因为只要覆盖了一个采样点，我们就需要使用片段着色器算出该片段被完整覆盖的颜色，然后按照采样点被覆盖的比例减小颜色即可。
 
 ###OpenGL的MSAA
 我们可以使用下面的代码开启MSAA。
@@ -1355,7 +1359,7 @@ glVertexAttribDivisor(2, 1);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glEnable(GL_MULTISAMPLE);
 
-如果我们需要离屏MSAA，那么我么那就必须自己实现多重采样。
+如果我们需要离屏MSAA，那么我们就必须自己实现多重采样。
 
 ###多重采样纹理附件
 &emsp;&emsp;创建纹理目标时，使用glTexImage2DMultisample代替glTexImage2D，纹理目标是GL_TEXTURE_2D_MULTISAPLE。第二个参数是样本数，我们一般使用4个，就和上面的图片一样。如果最后一个参数为GL_TRUE，图像将会对每个纹素使用相同的样本位置以及相同数量的子采样点个数。
@@ -1371,7 +1375,7 @@ glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTI
 ```
 
 ###渲染到多重采样帧缓冲
-&emsp;&emsp;只要我们配置好了多重采样帧缓冲，只要我们绑定好了颜色、深度、模板缓冲。因为多重采样的图像比普通图像包含更多的信息，所以我么通常使用glBlitFramebuffer来转换，他能够将一个帧缓冲的某个区域复制到另一个帧缓冲中，并且将多重采样缓冲还原。下面是将多重采样帧缓冲放到屏幕上显示。
+&emsp;&emsp;配置好多重采样帧缓冲，绑定好了颜色、深度、模板缓冲。因为多重采样的图像比普通图像包含更多的信息，所以我么通常使用glBlitFramebuffer来转换，他能够将一个帧缓冲的某个区域复制到另一个帧缓冲中，并且将多重采样缓冲还原。下面是将多重采样帧缓冲放到屏幕上显示。
 
 ```
 glBindFramebuffer(GL_READ_FRAMEBUFFER, multisampledFBO);
@@ -1396,16 +1400,16 @@ glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT,
 &emsp;&emsp;我们之前使用的光照模型是Phone模型，但是该模型在低反光度时会存在不正常的高光区域。根本原因在于在该模型下计算反射光强度时，我们需要根据反射光与视线的夹角大小来决定光强，而当摄像机和光源在同一侧时，可能存在反射光与视线夹角大于90度，而我们使用cos函数来模拟越接近于0光强越大这个过程，那么当夹角大于90度时取值为负数就存在问题了。
 
 &emsp;&emsp;Blinn-Phong模型就是取视线与反射光的中线，计算中线与法线的偏差角度，可以保证始终小于90度。
-![此处输入图片的描述][24]
-![此处输入图片的描述][25]
-![此处输入图片的描述][26]
+![此处输入图片的描述][27]
+![此处输入图片的描述][28]
+![此处输入图片的描述][29]
 
 ##Gamma校正
 &emsp;&emsp;问题在于，人类感知的光线变化、代码里定义的光线变化、监视器展示的光线变化曲线是不一样的。一般代码里定义的光线变化是物体光量变化，它是一次线性的。
-![此处输入图片的描述][27]
+![此处输入图片的描述][30]
 
 &emsp;&emsp;上图中第二行为不同线性光量下的亮度，第一个行为该光量下人眼察觉到的，可以得出，光量增加了一倍，人眼才能察觉到亮度增加了0.1。但是CRT的亮度刚好与人眼相反，电压线性变化时，光量以2.2为幂，指数函数变化。
-![此处输入图片的描述][28]
+![此处输入图片的描述][31]
 
 &emsp;&emsp;当我们以物体光亮为基准实现光照时，有一个问题，我们在渲染时的光亮线性变化在CRT显示器上就是指数变化，这在复杂的光照计算时会显得不真实。为此，我们需要gamma校正。
 
@@ -1430,25 +1434,28 @@ glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT,
   [4]: https://imgconvert.csdnimg.cn/aHR0cDovL2xlYXJub3BlbmdsLmNvbS9pbWcvZ2V0dGluZy1zdGFydGVkL2Nvb3JkaW5hdGVfc3lzdGVtcy5wbmc?x-oss-process=image/format,png
   [5]: https://img-blog.csdnimg.cn/20191021204307418.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
   [6]: https://img-blog.csdnimg.cn/20191021204327351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [7]: https://img-blog.csdnimg.cn/20191022223022661.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [8]: https://mp.csdn.net/postedit/102667561
-  [9]: https://img-blog.csdnimg.cn/20191028160004363.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [10]: https://img-blog.csdnimg.cn/20191029202101527.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [11]: https://img-blog.csdnimg.cn/20191029200348557.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [12]: https://img-blog.csdnimg.cn/20191031181251505.png
-  [13]: https://img-blog.csdnimg.cn/2019103118144279.png
-  [14]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzAxL2RlcHRoX25vbl9saW5lYXJfZ3JhcGgucG5n?x-oss-process=image/format,png
-  [15]: https://img-blog.csdnimg.cn/20191106173308712.png
-  [16]: https://img-blog.csdnimg.cn/20191106174524846.png
-  [17]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA4L2FkdmFuY2VkX2dsc2xfYmluZGluZ19wb2ludHMucG5n?x-oss-process=image/format,png
-  [18]: https://img-blog.csdnimg.cn/20191218113539940.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
-  [19]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9ob3VzZXMucG5n?x-oss-process=image/format,png
-  [20]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9leHBsb3Npb24ucG5n?x-oss-process=image/format,png
-  [21]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9ub3JtYWxzLnBuZw?x-oss-process=image/format,png
-  [22]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzExL2FudGlfYWxpYXNpbmdfem9vbWVkLnBuZw?x-oss-process=image/format,png
-  [23]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzExL2FudGlfYWxpYXNpbmdfc2FtcGxlX3BvaW50cy5wbmc?x-oss-process=image/format,png
-  [24]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX2NvbXBhcnJpc29uLnBuZw?x-oss-process=image/format,png
-  [25]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX292ZXJfOTAucG5n?x-oss-process=image/format,png
-  [26]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX2hhbGZ3YXlfdmVjdG9yLnBuZw?x-oss-process=image/format,png
-  [27]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAyL2dhbW1hX2NvcnJlY3Rpb25fYnJpZ2h0bmVzcy5wbmc?x-oss-process=image/format,png
-  [28]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAyL2dhbW1hX2NvcnJlY3Rpb25fZ2FtbWFfY3VydmVzLnBuZw?x-oss-process=image/format,png
+  [7]: https://blog.csdn.net/csxiaoshui/article/details/52785751
+  [8]: https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/02%20Creating%20a%20window/
+  [9]: https://img-blog.csdnimg.cn/20191022223022661.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
+  [10]: https://mp.csdn.net/postedit/102667561
+  [11]: https://img-blog.csdnimg.cn/20191028160004363.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
+  [12]: https://img-blog.csdnimg.cn/20191029202101527.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
+  [13]: https://img-blog.csdnimg.cn/20191029200348557.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
+  [14]: https://private.codecogs.com/gif.latex?1.0%20/%281.0%20&plus;%20a%20*%20D%20&plus;%20b%20*%20D%5E2%29
+  [15]: https://img-blog.csdnimg.cn/20191031181251505.png
+  [16]: https://img-blog.csdnimg.cn/2019103118144279.png
+  [17]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzAxL2RlcHRoX25vbl9saW5lYXJfZ3JhcGgucG5n?x-oss-process=image/format,png
+  [18]: https://img-blog.csdnimg.cn/20191106173308712.png
+  [19]: https://img-blog.csdnimg.cn/20191106174524846.png
+  [20]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA4L2FkdmFuY2VkX2dsc2xfYmluZGluZ19wb2ludHMucG5n?x-oss-process=image/format,png
+  [21]: https://img-blog.csdnimg.cn/20191218113539940.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2OTgzMTk1,size_16,color_FFFFFF,t_70
+  [22]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9ob3VzZXMucG5n?x-oss-process=image/format,png
+  [23]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9leHBsb3Npb24ucG5n?x-oss-process=image/format,png
+  [24]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzA5L2dlb21ldHJ5X3NoYWRlcl9ub3JtYWxzLnBuZw?x-oss-process=image/format,png
+  [25]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzExL2FudGlfYWxpYXNpbmdfem9vbWVkLnBuZw?x-oss-process=image/format,png
+  [26]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA0LzExL2FudGlfYWxpYXNpbmdfc2FtcGxlX3BvaW50cy5wbmc?x-oss-process=image/format,png
+  [27]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX2NvbXBhcnJpc29uLnBuZw?x-oss-process=image/format,png
+  [28]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX292ZXJfOTAucG5n?x-oss-process=image/format,png
+  [29]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAxL2FkdmFuY2VkX2xpZ2h0aW5nX2hhbGZ3YXlfdmVjdG9yLnBuZw?x-oss-process=image/format,png
+  [30]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAyL2dhbW1hX2NvcnJlY3Rpb25fYnJpZ2h0bmVzcy5wbmc?x-oss-process=image/format,png
+  [31]: https://imgconvert.csdnimg.cn/aHR0cHM6Ly9sZWFybm9wZW5nbC1jbi5naXRodWIuaW8vaW1nLzA1LzAyL2dhbW1hX2NvcnJlY3Rpb25fZ2FtbWFfY3VydmVzLnBuZw?x-oss-process=image/format,png
